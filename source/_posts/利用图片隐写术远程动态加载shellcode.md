@@ -21,13 +21,13 @@ BMP文件的数据按照从文件头开始的先后顺序分为四个部分：
 
 下面结合Windows结构体的定义，通过一个表来分析这四个部分。
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5f3b40f40302bd00012978c6)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/1598344206573-cb56e0e6-513a-480c-85ee-e8228489c009.png)
 
 这里已经有先人分析了，引用参考
 
 打开010 Editor 然后把文件拖入分析
 
-![img](https://img-blog.csdn.net/20170204151749901?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcXE3ODQ0Mjc2MQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/1597633326594-c31c43a6-c297-4cbb-b517-31747abb6df9.png)
 
 一、bmp文件头
 
@@ -231,19 +231,19 @@ int main(int argc, char* argv[])
 
 运行结果：
 
-![img](https://cdn.nlark.com/yuque/0/2020/png/262397/1597286887029-1b31201c-ecdc-4cc0-b80b-641ca70f457e.png)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/1597286887029-1b31201c-ecdc-4cc0-b80b-641ca70f457e.png)
 
 #### 二、文件上传
 
 进入阿里云控制台点击对象存储OSS，创建 Bucket，将读写权限改为公共读。
 
-![img](https://cdn.nlark.com/yuque/0/2020/png/262397/1597286949252-38c935a2-1ea6-484d-9f13-1b40e55ad670.png)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/1597286949252-38c935a2-1ea6-484d-9f13-1b40e55ad670.png)
 
 然后申请AccessKey创建成功将获取到AccessKeyID和AccessKeySecret。
 
 https://usercenter.console.aliyun.com/#/manage/ak
 
-![img](https://cdn.nlark.com/yuque/0/2020/png/262397/1597286970287-c9426c02-f5e5-494b-a463-4be9eea9cfb8.png)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/1597286970287-c9426c02-f5e5-494b-a463-4be9eea9cfb8.png)
 
 使用aliyunSDK中的put_object_from_file方法上传单个文件
 
@@ -293,7 +293,7 @@ if __name__ == '__main__':
     oss.uploadFile()
 ```
 
-![img](https://cdn.nlark.com/yuque/0/2020/png/262397/1597286914815-2665d6c2-69c4-40f4-9139-cc9580b1e61c.png)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/1597286914815-2665d6c2-69c4-40f4-9139-cc9580b1e61c.png)
 
 #### 三、远程加载
 
@@ -394,7 +394,7 @@ int main(int argc, char* argv[])
 
 思路和主要代码都给出来了，动动手就写出来了，这里我把以上功能做成Web在线生成的，采用模板化进行编译方便更新维护，有什么问题欢迎反馈交流。
 
-![img](https://cdn.nlark.com/yuque/0/2020/gif/262397/1597286872411-7930443a-697a-435d-8ba7-f30f2731804d.gif)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/1597286872411-7930443a-697a-435d-8ba7-f30f2731804d.gif)
 
 ### 0x04 参考链接
 

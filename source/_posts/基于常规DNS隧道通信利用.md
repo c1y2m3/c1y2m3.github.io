@@ -13,7 +13,7 @@ description: 极客兔兔的小站，致力于分享一些技术教程和有趣�
 
 中继过程中的一个关键点是对DNS缓存机制的规避，因为如果解析的域名在Local DNS 中已经有缓存时，Local DNS 就不会继续发送数据包。所以在构造请求中，每次查询的域名需要不同或者是已过期的。
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5d654c6628011f5f6b5e56e4)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/xx1.png)
 
 # DNSCAT2
 
@@ -21,36 +21,36 @@ DNSCAT2用于通过DNS协议创建恶意软件的命令和控制通道（C＆C�
 
 一开始，需要设置一个NS记录指向自己的子域名，再设置一个A记录指向自己部署server端的服务器地址。如下图的设置：
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5d654b0590144e41c4b34961)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/xx2.png)
 
 解析配置完成后，在服务端nc监听下udp的53端口，再回到windows机器ping下ns域名,如果收到回显,证明解析成功。
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5d654b2628011f5f6b5e564b)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/xx3.png)
 
 接下来，在server端开启隧道：
 
 ruby./dnscat2.rb dnscat.[domain] –no-cache
 [domain]是刚设置的ns记录的子域名，–no-cache代表不进行缓存
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5d654b4990144e41c4b34984)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/xx4.png)
 
 我们以相同的方式启动客户端，并看到会话已经建立。
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5d654b7332f2ca3c6587cf34)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/xx5.png)
 
 回到服务端使用shell进行命令控制:
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5d654bcd90144e41c4b349be)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/xx6.png)
 
 在客户端抓取流量包可以看到Dnscat2 主要进行了TXT,CNAME,MX查询。
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5d654c026d67ff2f280a2cf3)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/xx7.png)
 
 并且dnscat2客户端没有直接向我的C2服务器发送DNS查询，相反，受害者的系统正在与标准可信DNS服务器进行通信并转发至该域的权威DNS服务器，
 
 正如下捕获的数据包, 受害者的本地DNS服务器正在尝试解析“dnscat.[domain].cn”域中的主机名，
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5d654c4932f2ca3c6587cf8f)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/xx8.png)
 
 # NativePayload_DNS
 
@@ -65,7 +65,7 @@ C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe /out: Dnsbceon.exe Nativ
 实现原理：
 查看c#源代码，具体分以下三步来实现分离式免杀执行shellcode，通过循环遍历请求DNS中的PTR记录，将返回的域名进行拼接提取,最终调用kernel32申请内存执行shellcode。
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5d44122832f2ca7e75d5405b)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/xx9.png)
 
 首先使用MSF生成shellcode,如下:
 

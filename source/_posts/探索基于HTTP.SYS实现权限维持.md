@@ -22,19 +22,19 @@ description: 极客兔兔的小站，致力于分享一些技术教程和有趣�
 
 winrm quickconfig –q
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5dd643c2b54c8d62368ed46e)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20230201195551.png)
 
 此时使用netsh http show servicestate
 
 可以查看到http.sys新注册了一条url前缀：
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5dd643e06d67ff57e939b1d0)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/20230201195619.png)
 
 由于系统原本没有开启5985端口，为了增加后门的隐蔽性，故通过以下命令将winrm服务端口修改至80端口，达到端口复用的效果。
 
 winrm set winrm/config/Listener?Address=*+Transport=HTTP @{Port=”80”}
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5dd6440290144e0b52ff4fd5)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/3_20230201195638.png)
 
 默认客户端连接则会提示Winrs error:WinRM 客户端无法处理该请求。如果身份验证方案与 Kerberos 不同，或者客户端计算机…,因为WinRM只允许当前域用户或者处于本机TrustedHosts列表中的远程主机进行访问，则需在客户端添加一个TrustedHost表，*代表信任远程任意主机：
 
@@ -42,7 +42,7 @@ Set-Item WSMan:localhost\client\trustedhosts -value *
 
 然后使用winrs命令连接远程web服务端口获得交互式SHELL,
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5dd64426a3725915003627e4)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/4_20230201195724.png)
 
 使用python实现一款支持NTLM hash的客户端，需要注意的是：
 
@@ -52,13 +52,13 @@ windows 2012以及之后只能抓到NTLM的Hash，直接使用即可。
 最终实现的代码已上传至github，地址如下：
 
 https://github.com/c1y2m3/python-tools/blob/master/WinrmAttack.py
-![img](https://www.yunzhijia.com/microblog/filesvr/5ddbefaeb54c8d62369991a6)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/555_20230201195749.png)
 
 # HTTP ServerAPI端口复用
 
  微软对外开放了如何调用这种http.sys驱动机制的API接口，也就是HTTP Server API。HTTP Server API 运行在用户模式中，也就是说任意用户都可以调用该API实现一个HttpListener，与 IIS 共享端口，但是前提是你必须拥有管理员权限。
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5dd64458b54c8d62368ed80e)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/6_20230201195814.png)
 
 上图整个过程描述如下：
 
@@ -76,7 +76,7 @@ https://docs.microsoft.com/zh-cn/windows/win32/http/http-server-sample-applicati
 
 笔者对其demo进行了简单的修改，进行如下演示：
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5dd6448e28011f0fc49af9f1)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/7_20230201195905.png)
 
 通过pReq->CookedUrl.pQueryString 能够读取url中的参数，去除参数后的问号对字符串拼接，
 
@@ -90,7 +90,7 @@ wcsncpy_s(QueryString, wcslen(QueryString), pReq->CookedUrl.pQueryString + 5, wc
 wprintf(L"[*] QueryStringDecode:%ws\n", QueryString);
 ```
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5dd644b36d67ff57e939b70f)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/8_20230201195935.png)
 
 # 后门功能设计
 
@@ -102,20 +102,20 @@ wprintf(L"[*] QueryStringDecode:%ws\n", QueryString);
 
 https://github.com/3gstudent/Homework-of-C-Language/blob/master/UsePipeToExeCmd.cpp
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5dd644fc32f2ca155fc9e81b)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/9_20230201200005.png)
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5dd64511b54c8d62368edc4b)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/10_20230201200034.png)
 
 在测试过程中发现当传入特殊字符时，例如空格，单双，引号等字符会被编码，导致某些命令无法解析执行 ,如图所示:
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5dd64543a372591500362ea7)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/11_20230201200053.png)
 
 这里笔者对命令使用了base64解码处理，解决以上问题且可以对流量进行简单加密，以及对回传的结果作格式转换，\n换行符转换成html中的
 。
 
 并使用#pragma comment( linker, “/subsystem:\”windows\” /entry:\”wmainCRTStartup\”” )，屏蔽控制台应用程序的窗口，修改测试代码如下图：
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5dd645646d67ff57e939bb55)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/12_20230201200129.png)
 
 # 效果演示
 
@@ -125,8 +125,8 @@ https://github.com/c1y2m3/python-tools/blob/master/IIS_backdoor/main.cpp
 
 可以看到，未注册/a/前缀时，因为此时只有iis使用了端口共享机制，http.sys把访问/a/的请求交给了iis处理，iis返回了404页面。
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5dd6459532f2ca155fc9eb78)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/13_20230201200155.png)
 
 随后我们用自己的程序把/a/前缀注册到http.sys，此时访问/a/路径,http.sys于是把请求交了我们的后门程序并回显系统命令。
 
-![img](https://www.yunzhijia.com/microblog/filesvr/5dd645b16d67ff57e939bd03)
+![img](https://c1y2m3.oss-cn-beijing.aliyuncs.com/14_20230201200225.png)
