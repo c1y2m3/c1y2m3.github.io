@@ -104,4 +104,4 @@ theme: cactus
 deploy:
   type: git
   repository: git@github.com:c1y2m3/c1y2m3.github.io.git
-  branch: gh-pages
+  branch: hexo
