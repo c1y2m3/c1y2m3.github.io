@@ -21,9 +21,10 @@
 <meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/test/dingd.png">
 <meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/20230925193219.png">
 <meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/test/Dingtalk_20240322151320.jpg">
-<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/test/lbjqr.png">
+<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/68747470733a2f2f633179326d332e6f73732d636e2d6265696a696e672e616c6979756e63732e636f6d2f5f32303233313131333231303934352e706e67.png">
+<meta property="og:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/image-20240322160221242.png">
 <meta property="article:published_time" content="2024-01-05T03:51:24.000Z">
-<meta property="article:modified_time" content="2024-03-22T07:20:22.209Z">
+<meta property="article:modified_time" content="2024-03-22T08:04:32.926Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://c1y2m3.oss-cn-beijing.aliyuncs.com/test/jsch.png">
@@ -155,7 +156,7 @@
 
   <div class="content" itemprop="articleBody">
     <p>又是一年年底，去年回老家创业失败后，今年三月份中旬又回到南京，重新回到了安全行业，打了几场攻防、红队评估项目，今时不同往日，攻防的难度也一年比一年难，深刻理解了知识面宽度决定攻击面广度，知识链深度决定攻击链的长度，所有可能不起眼的问题，都有可能造成攻击的线索之一，甚至成为该攻击链闭环中不可或缺的一部分。</p>
-<h2 id="关于工作"><a href="#关于工作" class="headerlink" title="关于工作"></a><strong>关于工作</strong></h2><p><strong>今年主要还是往红队研发方向发展了</strong></p>
+<h2 id="关于工作"><a href="#关于工作" class="headerlink" title="关于工作"></a><strong>关于工作</strong></h2><p><strong>今年主要还是往红队研发方向发展了，总结下自己做的玩具</strong>。</p>
 <h3 id="资产收集平台"><a href="#资产收集平台" class="headerlink" title="资产收集平台"></a>资产收集平台</h3><p>入职的时候打了场网信办护网中，发现测试目标太多，资产收集、指纹识别、打点刷分慢的问题，有的时间一下子就是几万甚至十几万的资产，没有一套完整的流程效率低下也是很头痛的一件事，故通过以下维度来解决</p>
 <h4 id="全端口扫描"><a href="#全端口扫描" class="headerlink" title="全端口扫描"></a>全端口扫描</h4><p>对开源的kscan、TxPortMap以及masscan、nmap 进行了调研测试，发现TxPortMap的全端口速度很优，进行二开，然后配合redis进行队列，使用节点进行分布式扫描，基于Python的paramiko模块进行节点管理。<br>解决问题：扫描一万ip的全端口只需要半小时以内，节点越多扫描越快，速度快就代表了肯定会有遗漏，但是如果多扫描几遍呢？</p>
 <h4 id="web指纹探测"><a href="#web指纹探测" class="headerlink" title="web指纹探测"></a>web指纹探测</h4><p>发现问题：<br>1、常见的开源web指纹较单一，无法覆盖较多常见的或者是cnvd的cms。<br>2、公开的指纹很多都是基于中文匹配，比如xxxx公司开发，这会导致很多二开的系统，或者去信息的cms无法匹配到。<br>3、302跳转获取不到title以及只能回去到跳转前的页面，这样子会漏掉很多指纹。<br>解决：通过整理cnvd、FingerprintHub、EHole，goby，ddpoc的cms指纹整理出了1500+的cms指纹，配合后期poc框架使用。</p>
@@ -163,14 +164,31 @@
 <h4 id="进度"><a href="#进度" class="headerlink" title="进度"></a>进度</h4><p>9月份的时候把前端UI换了一下，加了钉钉的扫码认证，方便内部认证，逐渐荒废了，转向做网络资产测绘平台去了，目前也就资产收集完根据指纹进行检测poc功能可以，平常快速捡捡洞。</p>
 <h3 id="网络测绘平台："><a href="#网络测绘平台：" class="headerlink" title="网络测绘平台："></a>网络测绘平台：</h3><p>从一开始的资产收集平台再到现在的网络测绘平台，已经迭代了很多个版本，从一开始的es、kibana&#x3D;》flask api &#x3D;》w12scan，到现在已经有了基础的web界面</p>
 <h4 id="v1-0"><a href="#v1-0" class="headerlink" title="v1.0"></a>v1.0</h4><h5 id="江苏省区域测绘"><a href="#江苏省区域测绘" class="headerlink" title="江苏省区域测绘"></a>江苏省区域测绘</h5><p><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/test/jsch.png"><br>实现api接口查询功能，方便脚本去调用或者是poc去扫描。</p>
-<h5 id="企业资产测绘"><a href="#企业资产测绘" class="headerlink" title="企业资产测绘"></a>企业资产测绘</h5><p>输入一个企业名称，显示分支机构以及对外投资的子域资产，对子域进行指纹识别以及IP全端口扫描，参考网络测绘思路。<br><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/test/qych.png" alt="image.png"><br><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/test/kibana_images.png" alt="image.png"><br>这些在今年6.7月份的时候就已经实现的差不多了，在实战中的效果还是较为满意的，也开放给同事一起使用维护，后面因为存储成本太高的原因就没有继续，毕竟是纯自费在做。</p>
-<h4 id="v2-0"><a href="#v2-0" class="headerlink" title="v2.0"></a>v2.0</h4><h5 id="全量网络资产测绘"><a href="#全量网络资产测绘" class="headerlink" title="全量网络资产测绘"></a>全量网络资产测绘</h5><p>10月份跟着领导一起去新公司了，然后前期有大量时间让我去做网络测绘方面的调研、设计、开发，结合了前期版本进行完善、数据重构、数据源采集、分库清洗等细化，因为前期是两个版本、完全是独立的就很乱，成本花费的也很大，一直想合并到一个平台上，目前也在逐步实现。<br>目前的使用的框架有redis、es集群(数据存储)+flask api(接口)+vue(前端展示)+minio(图片存储)</p>
+<h5 id="企业资产测绘"><a href="#企业资产测绘" class="headerlink" title="企业资产测绘"></a>企业资产测绘</h5><p>输入一个企业名称，显示分支机构以及对外投资的子域资产，对子域进行指纹识别以及IP全端口扫描，参考网络测绘思路。<br><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/test/qych.png" alt="image.png"><br><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/test/kibana_images.png" alt="image.png"><br>这些在今年6.7月份的时候就已经实现的差不多了，在实战中的效果还是较为满意的，也开放给同事一起使用维护，后面因为存储的原因就没有继续，毕竟是纯自费在做。</p>
+<h4 id="v2-0"><a href="#v2-0" class="headerlink" title="v2.0"></a>v2.0</h4><h5 id="全量网络资产测绘"><a href="#全量网络资产测绘" class="headerlink" title="全量网络资产测绘"></a>全量网络资产测绘</h5><p>10月份跟着领导一起去新公司了，然后前期有大量时间让我去做网络测绘方面的调研、设计、开发，结合了前期版本进行完善、数据重构、数据源采集、分库清洗等细化，因为前期是两个版本、完全是独立的就很乱，一直想合并到一个平台上，目前也在逐步实现。<br>使用的框架有redis、es集群(数据存储)+flask api(接口)+vue(前端展示)+minio(图片存储)</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">company    (企业基础信息)</span><br><span class="line">holding     (控股公司)</span><br><span class="line">patent   (专利信息) </span><br><span class="line">email  (邮箱)</span><br><span class="line">shareholder (股东信息)</span><br><span class="line">supplier    (供应商)</span><br><span class="line">icp_no   (icp备案)  </span><br><span class="line">subdomains   (子域名)</span><br><span class="line">new_ports (资产测绘)</span><br><span class="line">whois  (whois信息)</span><br><span class="line">ocr_txt （ocr图片识别）</span><br><span class="line">b64_images(图片处理)</span><br><span class="line">net (CDN库)</span><br><span class="line">link_spider (外链)</span><br></pre></td></tr></table></figure>
-<p>已经做出了一版网络资产测绘demo，等数据源完善了后期会做一个全量的企业测绘搜索，在攻防中输入个企业全称然后就输出控股信息、以及对应的网络资产暴露面，企业邮箱等，更快的进行打点、社工，目前一个人在一点点完善，争取2024年完善开放出来内测<br><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/test/vue.png" alt="image.png"></p>
-<h3 id="自动化钓鱼平台"><a href="#自动化钓鱼平台" class="headerlink" title="自动化钓鱼平台"></a>自动化钓鱼平台</h3><p>基于PHP商业框架进行二开，增加了发送附件、钉钉提醒功能，在磐石、等几个金融项目中使用了几次，提高了工作效率，后续想做成一个接口形式，方便团队来使用，只需要点一下会不会更方便一些?<br><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/test/fish.png" alt="image.png"><br><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/test/dingd.png" alt="image.png"></p>
-<h3 id="网络准入平台"><a href="#网络准入平台" class="headerlink" title="网络准入平台"></a>网络准入平台</h3><p>把shellcode载荷放在平台生成的图片中，前锋马回传机器基础信息用于判断是否是沙箱或调试机，确认是真实目标，通过IM通讯软件下发给目标然后上线<br>正好做完之后在银联项目中实践了并完善了下，效果还是很好的。<br><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/20230925193219.png"><br><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/test/Dingtalk_20240322151320.jpg" alt="微信截图_20231226172937.png"></p>
+<p>目前已经做出了一版网络资产测绘demo，等数据源完善了后期会做一个全量的企业测绘搜索，在攻防中输入个企业全称然后就输出控股信息、以及对应的网络资产暴露面，企业邮箱等，更快的进行打点、社工，目前一个人在一点点完善，一直在降本增效压缩成本，确保能开发出来，争取2024年完善开放出来内测。</p>
+<img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/test/vue.png" alt="image.png" style="zoom:50%;" />
+
+<h3 id="自动化钓鱼平台"><a href="#自动化钓鱼平台" class="headerlink" title="自动化钓鱼平台"></a>自动化钓鱼平台</h3><p>基于PHP商业框架进行二开，增加了发送附件、钉钉提醒功能，在磐石、等几个金融项目中使用了几次，提高了工作效率，后续想做成一个接口形式，方便团队来使用，只需要点一下会不会更方便一些?</p>
+<img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/test/fish.png" alt="image.png" style="zoom: 50%;" />
+
+<img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/test/dingd.png" alt="image.png">
+
+<h3 id="网络准入平台"><a href="#网络准入平台" class="headerlink" title="网络准入平台"></a>网络准入平台</h3><p>把shellcode载荷放在平台生成的图片中，前锋马回传机器基础信息用于判断是否是沙箱或调试机，确认是真实目标，通过IM通讯软件下发给目标然后上线<br>正好做完之后在银联项目中实践了并完善了下，效果还是很好的。</p>
+<img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/20230925193219.png" style="zoom: 50%;" />
+
+
+
+
+
+<img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/test/Dingtalk_20240322151320.jpg" alt="微信截图_20231226172937.png" >
+
 <h3 id="内网渗透平台"><a href="#内网渗透平台" class="headerlink" title="内网渗透平台"></a>内网渗透平台</h3><p>这是个老项目了，2020年在奇安信的时候就一直开发完善更新到现在，年中的时候换了一版前端，修改了界面逻辑，以便于多人操作主要功能还是用vs模板来在线生成。<br><a target="_blank" rel="noopener" href="https://github.com/c1y2m3/Tailorbox">https://github.com/c1y2m3/Tailorbox</a></p>
-<h3 id="钉钉机器人"><a href="#钉钉机器人" class="headerlink" title="钉钉机器人"></a>钉钉机器人</h3><p>简化工作流，更好的内部协同。<br><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/test/lbjqr.png" alt="image.png"><br>离职后荒废了….</p>
+<p><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/68747470733a2f2f633179326d332e6f73732d636e2d6265696a696e672e616c6979756e63732e636f6d2f5f32303233313131333231303934352e706e67.png"></p>
+<h3 id="钉钉机器人"><a href="#钉钉机器人" class="headerlink" title="钉钉机器人"></a>钉钉机器人</h3><p>简化工作流，更好的内部协同。</p>
+<p><img src="https://c1y2m3.oss-cn-beijing.aliyuncs.com/image-20240322160221242.png"></p>
+<p>离职后荒废了….</p>
 <h2 id="关于计划"><a href="#关于计划" class="headerlink" title="关于计划"></a>关于计划</h2><p>把做的东西都用起来，做精做细持续开发维护，从实际情况中有效地解决问题，不要做毫无意义的工具和事情。</p>
 
   </div>
